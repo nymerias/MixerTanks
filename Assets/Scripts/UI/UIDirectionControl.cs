@@ -9,21 +9,19 @@ namespace Complete
         // elements such as the health bar face the correct direction.
 
         [FormerlySerializedAsAttribute("m_UseRelativeRotation")]
-        public bool m_UseRelativeRotation = true;       // Use relative rotation should be used for this gameobject?
 
+        public bool _useRelativeRotation = true;       // Use relative rotation should be used for this gameobject?
 
         private Quaternion m_RelativeRotation;          // The local rotatation at the start of the scene.
 
-
-        private void Start ()
+        private void Start()
         {
             m_RelativeRotation = transform.parent.localRotation;
         }
 
-
-        private void Update ()
+        private void Update()
         {
-            if (m_UseRelativeRotation)
+            if (_useRelativeRotation)
                 transform.rotation = m_RelativeRotation;
         }
     }
