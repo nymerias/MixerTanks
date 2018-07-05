@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Serialization;
+using System.Linq;
 
 namespace Complete
 {
@@ -14,46 +15,34 @@ namespace Complete
     public class TankManager
     {
         [FormerlySerializedAsAttribute("m_PlayerColor")]
-        public Color _playerColor;                             // This is the color this tank will be tinted.
+        public Color _playerColor;
         [FormerlySerializedAsAttribute("m_SpawnPoint")]
-        public Transform _spawnPoint;                          // The position and direction the tank will have when it spawns.
-        [HideInInspector] public int _playerNumber;            // This specifies which player this the manager for.
-        [HideInInspector] public string _coloredPlayerText;    // A string that represents the player with their number colored to match their tank.
-        [HideInInspector] public GameObject _instance;         // A reference to the instance of the tank when it is created.
-        [HideInInspector] public int _wins;                    // The number of wins this player has so far.
-
+        public Transform _spawnPoint;
+        [HideInInspector] public int _playerNumber;
+        [HideInInspector] public string _coloredPlayerText;
+        [HideInInspector] public GameObject _instance;
+        [HideInInspector] public int _wins;
 
         [FormerlySerializedAsAttribute("m_Movement")]
-        private TankMovement _movement;                        // Reference to tank's movement script, used to disable and enable control.
+        private TankMovement _movement;
         [FormerlySerializedAsAttribute("m_Shooting")]
-        private TankShooting _shooting;                        // Reference to tank's shooting script, used to disable and enable control.
+        private TankShooting _shooting;
         [FormerlySerializedAsAttribute("m_CanvasGameObject")]
         private GameObject _canvasGameObject;
 
-
         public void Setup()
         {
-            // Get references to the components.
             _movement = _instance.GetComponent<TankMovement>();
             _shooting = _instance.GetComponent<TankShooting>();
             _canvasGameObject = _instance.GetComponentInChildren<Canvas>().gameObject;
 
-            // Set the player numbers to be consistent across the scripts.
             _movement._playerNumber = _playerNumber;
             _shooting._playerNumber = _playerNumber;
 
-            // Create a string using the correct color that says 'PLAYER 1' etc based on the tank's color and the player's number.
             _coloredPlayerText = "<color=#" + ColorUtility.ToHtmlStringRGB(_playerColor) + ">PLAYER " + _playerNumber + "</color>";
 
-            // Get all of the renderers of the tank.
             MeshRenderer[] renderers = _instance.GetComponentsInChildren<MeshRenderer>();
-
-            // Go through all the renderers...
-            for (int i = 0; i < renderers.Length; i++)
-            {
-                // ... set their material color to the color specific to this tank.
-                renderers[i].material.color = _playerColor;
-            }
+            renderers.ToList().ForEach(x => x.material.color = _playerColor);
         }
 
         /// <summary>

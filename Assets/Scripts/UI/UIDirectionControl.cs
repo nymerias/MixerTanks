@@ -3,14 +3,13 @@ using UnityEngine.Serialization;
 
 namespace Complete
 {
+    /// <summary>
+    /// Used to make sure world space UI elements such as the health bar face the correct direction.
+    /// </summary>
     public class UIDirectionControl : MonoBehaviour
     {
-        // This class is used to make sure world space UI
-        // elements such as the health bar face the correct direction.
-
         [FormerlySerializedAsAttribute("m_UseRelativeRotation")]
-
-        public bool _useRelativeRotation = true;       // Use relative rotation should be used for this gameobject?
+        public bool _useRelativeRotation = true;        // Use relative rotation should be used for this gameobject?
 
         private Quaternion m_RelativeRotation;          // The local rotatation at the start of the scene.
 

@@ -14,15 +14,14 @@ namespace Complete
         public float _minSize = 6.5f;                  // The smallest orthographic size the camera can be.
         [HideInInspector] public Transform[] _targets; // All the targets the camera needs to encompass.
 
-
         [FormerlySerializedAsAttribute("m_Camera")]
-        private Camera _camera;                        // Used for referencing the camera.
+        private Camera _camera;
         [FormerlySerializedAsAttribute("m_ZoomSpeed")]
         private float _zoomSpeed;                      // Reference speed for the smooth damping of the orthographic size.
         [FormerlySerializedAsAttribute("m_MoveVelocity")]
         private Vector3 _moveVelocity;                 // Reference velocity for the smooth damping of the position.
         [FormerlySerializedAsAttribute("m_DesiredPosition")]
-        private Vector3 _desiredPosition;              // The position the camera is moving towards.
+        private Vector3 _desiredPosition;
 
         private void Awake()
         {
@@ -51,7 +50,7 @@ namespace Complete
             Vector3 averagePos = new Vector3();
             int numTargets = 0;
 
-            // Go through all the targets and add their positions together.
+            // Add all target positions positions together.
             _targets.ToList().ForEach(target =>
             {
                 if (target.gameObject.activeSelf) {
@@ -113,7 +112,7 @@ namespace Complete
         {
             FindAveragePosition();
 
-            transform.position = _desiredPosition;          // Set the camera's position to the desired position without damping.
+            transform.position = _desiredPosition;
             _camera.orthographicSize = FindRequiredSize();  // Find and set the required size of the camera.
         }
     }
