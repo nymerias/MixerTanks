@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Complete
 {
@@ -95,4 +96,3 @@ namespace Complete
         }
     }
 }
-using UnityEngine.Serialization;
