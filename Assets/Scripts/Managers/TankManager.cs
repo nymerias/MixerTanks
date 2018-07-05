@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Complete
 {
@@ -11,7 +12,9 @@ namespace Complete
         // and whether or not players have control of their tank in the 
         // different phases of the game.
 
+        [FormerlySerializedAsAttribute("m_PlayerColor")]
         public Color m_PlayerColor;                             // This is the color this tank will be tinted.
+        [FormerlySerializedAsAttribute("m_SpawnPoint")]
         public Transform m_SpawnPoint;                          // The position and direction the tank will have when it spawns.
         [HideInInspector] public int m_PlayerNumber;            // This specifies which player this the manager for.
         [HideInInspector] public string m_ColoredPlayerText;    // A string that represents the player with their number colored to match their tank.
@@ -19,8 +22,11 @@ namespace Complete
         [HideInInspector] public int m_Wins;                    // The number of wins this player has so far.
         
 
+        [FormerlySerializedAsAttribute("m_Movement")]
         private TankMovement m_Movement;                        // Reference to tank's movement script, used to disable and enable control.
+        [FormerlySerializedAsAttribute("m_Shooting")]
         private TankShooting m_Shooting;                        // Reference to tank's shooting script, used to disable and enable control.
+        [FormerlySerializedAsAttribute("m_CanvasGameObject")]
         private GameObject m_CanvasGameObject;                  // Used to disable the world space UI during the Starting and Ending phases of each round.
 
 

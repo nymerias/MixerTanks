@@ -1,15 +1,23 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Complete
 {
     public class ShellExplosion : MonoBehaviour
     {
+        [FormerlySerializedAsAttribute("m_TankMask")]
         public LayerMask m_TankMask;                        // Used to filter what the explosion affects, this should be set to "Players".
+        [FormerlySerializedAsAttribute("m_ExplosionParticles")]
         public ParticleSystem m_ExplosionParticles;         // Reference to the particles that will play on explosion.
+        [FormerlySerializedAsAttribute("m_ExplosionAudio")]
         public AudioSource m_ExplosionAudio;                // Reference to the audio that will play on explosion.
+        [FormerlySerializedAsAttribute("m_MaxDamage")]
         public float m_MaxDamage = 100f;                    // The amount of damage done if the explosion is centred on a tank.
+        [FormerlySerializedAsAttribute("m_ExplosionForce")]
         public float m_ExplosionForce = 1000f;              // The amount of force added to a tank at the centre of the explosion.
+        [FormerlySerializedAsAttribute("m_MaxLifeTime")]
         public float m_MaxLifeTime = 2f;                    // The time in seconds before the shell is removed.
+        [FormerlySerializedAsAttribute("m_ExplosionRadius")]
         public float m_ExplosionRadius = 5f;                // The maximum distance away from the explosion tanks can be and are still affected.
 
 

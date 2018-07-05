@@ -1,21 +1,32 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Serialization;
 
 namespace Complete
 {
     public class TankHealth : MonoBehaviour
     {
+        [FormerlySerializedAsAttribute("m_StartingHealth")]
         public float m_StartingHealth = 100f;               // The amount of health each tank starts with.
+        [FormerlySerializedAsAttribute("m_Slider")]
         public Slider m_Slider;                             // The slider to represent how much health the tank currently has.
+        [FormerlySerializedAsAttribute("m_FillImage")]
         public Image m_FillImage;                           // The image component of the slider.
+        [FormerlySerializedAsAttribute("m_FullHealthColor")]
         public Color m_FullHealthColor = Color.green;       // The color the health bar will be when on full health.
+        [FormerlySerializedAsAttribute("m_ZeroHealthColor")]
         public Color m_ZeroHealthColor = Color.red;         // The color the health bar will be when on no health.
+        [FormerlySerializedAsAttribute("m_ExplosionPrefab")]
         public GameObject m_ExplosionPrefab;                // A prefab that will be instantiated in Awake, then used whenever the tank dies.
         
         
+        [FormerlySerializedAsAttribute("m_ExplosionAudio")]
         private AudioSource m_ExplosionAudio;               // The audio source to play when the tank explodes.
+        [FormerlySerializedAsAttribute("m_ExplosionParticles")]
         private ParticleSystem m_ExplosionParticles;        // The particle system the will play when the tank is destroyed.
+        [FormerlySerializedAsAttribute("m_CurrentHealth")]
         private float m_CurrentHealth;                      // How much health the tank currently has.
+        [FormerlySerializedAsAttribute("m_Dead")]
         private bool m_Dead;                                // Has the tank been reduced beyond zero health yet?
 
 

@@ -1,18 +1,26 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Complete
 {
     public class CameraControl : MonoBehaviour
     {
+        [FormerlySerializedAsAttribute("m_DampTime")]
         public float m_DampTime = 0.2f;                 // Approximate time for the camera to refocus.
+        [FormerlySerializedAsAttribute("m_ScreenEdgeBuffer")]
         public float m_ScreenEdgeBuffer = 4f;           // Space between the top/bottom most target and the screen edge.
+        [FormerlySerializedAsAttribute("m_MinSize")]
         public float m_MinSize = 6.5f;                  // The smallest orthographic size the camera can be.
         [HideInInspector] public Transform[] m_Targets; // All the targets the camera needs to encompass.
 
 
+        [FormerlySerializedAsAttribute("m_Camera")]
         private Camera m_Camera;                        // Used for referencing the camera.
+        [FormerlySerializedAsAttribute("m_ZoomSpeed")]
         private float m_ZoomSpeed;                      // Reference speed for the smooth damping of the orthographic size.
+        [FormerlySerializedAsAttribute("m_MoveVelocity")]
         private Vector3 m_MoveVelocity;                 // Reference velocity for the smooth damping of the position.
+        [FormerlySerializedAsAttribute("m_DesiredPosition")]
         private Vector3 m_DesiredPosition;              // The position the camera is moving towards.
 
 

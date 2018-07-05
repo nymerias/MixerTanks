@@ -1,25 +1,40 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Serialization;
 
 namespace Complete
 {
     public class TankShooting : MonoBehaviour
     {
+        [FormerlySerializedAsAttribute("m_PlayerNumber")]
         public int m_PlayerNumber = 1;              // Used to identify the different players.
+        [FormerlySerializedAsAttribute("m_Shell")]
         public Rigidbody m_Shell;                   // Prefab of the shell.
+        [FormerlySerializedAsAttribute("m_FireTransform")]
         public Transform m_FireTransform;           // A child of the tank where the shells are spawned.
+        [FormerlySerializedAsAttribute("m_AimSlider")]
         public Slider m_AimSlider;                  // A child of the tank that displays the current launch force.
+        [FormerlySerializedAsAttribute("m_ShootingAudio")]
         public AudioSource m_ShootingAudio;         // Reference to the audio source used to play the shooting audio. NB: different to the movement audio source.
+        [FormerlySerializedAsAttribute("m_ChargingClip")]
         public AudioClip m_ChargingClip;            // Audio that plays when each shot is charging up.
+        [FormerlySerializedAsAttribute("m_FireClip")]
         public AudioClip m_FireClip;                // Audio that plays when each shot is fired.
+        [FormerlySerializedAsAttribute("m_MinLaunchForce")]
         public float m_MinLaunchForce = 15f;        // The force given to the shell if the fire button is not held.
+        [FormerlySerializedAsAttribute("m_MaxLaunchForce")]
         public float m_MaxLaunchForce = 30f;        // The force given to the shell if the fire button is held for the max charge time.
+        [FormerlySerializedAsAttribute("m_MaxChargeTime")]
         public float m_MaxChargeTime = 0.75f;       // How long the shell can charge for before it is fired at max force.
 
 
+        [FormerlySerializedAsAttribute("m_FireButton")]
         private string m_FireButton;                // The input axis that is used for launching shells.
+        [FormerlySerializedAsAttribute("m_CurrentLaunchForce")]
         private float m_CurrentLaunchForce;         // The force that will be given to the shell when the fire button is released.
+        [FormerlySerializedAsAttribute("m_ChargeSpeed")]
         private float m_ChargeSpeed;                // How fast the launch force increases, based on the max charge time.
+        [FormerlySerializedAsAttribute("m_Fired")]
         private bool m_Fired;                       // Whether or not the shell has been launched with this button press.
 
 

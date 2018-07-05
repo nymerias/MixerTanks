@@ -2,24 +2,37 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Serialization;
 
 namespace Complete
 {
     public class GameManager : MonoBehaviour
     {
+        [FormerlySerializedAsAttribute("m_NumRoundsToWin")]
         public int m_NumRoundsToWin = 5;            // The number of rounds a single player has to win to win the game.
+        [FormerlySerializedAsAttribute("m_StartDelay")]
         public float m_StartDelay = 3f;             // The delay between the start of RoundStarting and RoundPlaying phases.
+        [FormerlySerializedAsAttribute("m_EndDelay")]
         public float m_EndDelay = 3f;               // The delay between the end of RoundPlaying and RoundEnding phases.
+        [FormerlySerializedAsAttribute("m_CameraControl")]
         public CameraControl m_CameraControl;       // Reference to the CameraControl script for control during different phases.
+        [FormerlySerializedAsAttribute("m_MessageText")]
         public Text m_MessageText;                  // Reference to the overlay Text to display winning text, etc.
+        [FormerlySerializedAsAttribute("m_TankPrefab")]
         public GameObject m_TankPrefab;             // Reference to the prefab the players will control.
+        [FormerlySerializedAsAttribute("m_Tanks")]
         public TankManager[] m_Tanks;               // A collection of managers for enabling and disabling different aspects of the tanks.
 
-        
+
+        [FormerlySerializedAsAttribute("m_RoundNumber")]
         private int m_RoundNumber;                  // Which round the game is currently on.
+        [FormerlySerializedAsAttribute("m_StartWait")]
         private WaitForSeconds m_StartWait;         // Used to have a delay whilst the round starts.
+        [FormerlySerializedAsAttribute("m_EndWait")]
         private WaitForSeconds m_EndWait;           // Used to have a delay whilst the round or game ends.
+        [FormerlySerializedAsAttribute("m_RoundWinner")]
         private TankManager m_RoundWinner;          // Reference to the winner of the current round.  Used to make an announcement of who won.
+        [FormerlySerializedAsAttribute("m_GameWinner")]
         private TankManager m_GameWinner;           // Reference to the winner of the game.  Used to make an announcement of who won.
 
 

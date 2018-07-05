@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Complete
 {
@@ -7,6 +8,7 @@ namespace Complete
         // This class is used to make sure world space UI
         // elements such as the health bar face the correct direction.
 
+        [FormerlySerializedAsAttribute("m_UseRelativeRotation")]
         public bool m_UseRelativeRotation = true;       // Use relative rotation should be used for this gameobject?
 
 
