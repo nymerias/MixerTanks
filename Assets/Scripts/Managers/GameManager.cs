@@ -39,7 +39,7 @@ namespace Complete
         private void Start()
         {
             MixerInteractive.GoInteractive();
-            MixerInteractive.OnInteractivityStateChanged += OnInteractivityStateChanged;
+            MixerInteractive.OnInteractivityStateChanged += OnMixerInteractivtyStarted;
 
             _startWait = new WaitForSeconds(_startDelay);
             _endWait = new WaitForSeconds(_endDelay);
@@ -51,11 +51,25 @@ namespace Complete
             StartCoroutine(GameLoop());
         }
 
-        private void OnInteractivityStateChanged(object sender, InteractivityStateChangedEventArgs e)
+        private void OnMixerInteractivtyStarted(object sender, InteractivityStateChangedEventArgs e)
         {
             if (MixerInteractive.InteractivityState == InteractivityState.InteractivityEnabled)
             {
                 MixerInteractive.SetCurrentScene("lobby");
+
+                var label = MixerInteractive.GetControl("status") as InteractiveLabelControl;
+                label.SetText("Waiting for players to join");
+
+                MixerInteractive.OnInteractiveButtonEvent += (source, ev) =>
+                {
+                    //TODO: We will need to clean this up a bunch
+                    if (ev.ControlID == "player1")
+                    {
+                        label.SetText("Player 1 has joined");
+                        //ev.Participant.UserID
+                        ev.Participant.Group = MixerInteractive.GetGroup("controls");
+                    }
+                };
             }
         }
 
