@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Serialization;
 using System.Linq;
+using Microsoft.Mixer;
 
 namespace Complete
 {
@@ -20,6 +21,8 @@ namespace Complete
         public AudioClip _engineDriving;
         [FormerlySerializedAsAttribute("m_PitchRange")]
         public float _pitchRange = 0.2f;
+        [HideInInspector]
+        public uint participantId;
 
         [FormerlySerializedAsAttribute("m_MovementAxisName")]
         private string _movementAxisName;
@@ -35,6 +38,8 @@ namespace Complete
         private float _originalPitch;
         [FormerlySerializedAsAttribute("m_particleSystems")]
         private ParticleSystem[] _particleSystems;
+        [HideInInspector]
+        private InteractivityManager manager;
 
         private void Awake()
         {
@@ -72,6 +77,9 @@ namespace Complete
 
             // Store the original pitch of the audio source.
             _originalPitch = _movementAudio.pitch;
+
+            //Instantiate InteractivityManager
+            manager = InteractivityManager.SingletonInstance;
         }
 
         private void Update()
@@ -116,11 +124,20 @@ namespace Complete
         private void Move()
         {
             // Create a vector in the direction the tank is facing with a magnitude based on the input, speed and the time between frames.
-            if (MixerInteractive.GetJoystickY("joystick") > 0)
+            JoystickVertical();
+
+            Vector3 movement = transform.forward * _movementInputValue * _speed * Time.deltaTime;
+            _rigidbody.MovePosition(_rigidbody.position + movement);
+        }
+    
+       //Move the tank vertically
+       private void JoystickVertical()
+        {
+            if (manager.GetJoystick("joystick").GetY(participantId) > 0)
             {
                 _movementInputValue = 1;
-            } 
-            else if (MixerInteractive.GetJoystickY("joystick") < 0)
+            }
+            else if (manager.GetJoystick("joystick").GetY(participantId) < 0)
             {
                 _movementInputValue = -1;
             }
@@ -128,15 +145,33 @@ namespace Complete
             {
                 _movementInputValue = 0;
             }
-            Vector3 movement = transform.forward * _movementInputValue * _speed * Time.deltaTime;
-            _rigidbody.MovePosition(_rigidbody.position + movement);
         }
+
+        //Move the tank horizontally
+        private void JoystickHorizontal()
+        {
+            if (manager.GetJoystick("joystick").GetX(participantId) > 0)
+                {
+                    _turnInputValue = 1;
+                }
+                else if (manager.GetJoystick("joystick").GetX(participantId) < 0)
+                {
+                    _turnInputValue = -1;
+                }
+                else
+                {
+                    _turnInputValue = 0;
+                }
+        }
+
 
         /// <summary>
         /// Rotate the tank by rotating the rigid body
         /// </summary>
         private void Turn()
         {
+            JoystickHorizontal();
+
             float turn = _turnInputValue * _turnSpeed * Time.deltaTime;
 
             Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);
