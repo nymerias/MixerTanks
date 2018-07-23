@@ -36,6 +36,8 @@ namespace Complete
         [FormerlySerializedAsAttribute("m_GameWinner")]
         private TankManager _gameWinner;
 
+        private bool _allPlayersJoined = false;
+
         private void Start()
         {
             MixerInteractive.GoInteractive();
@@ -53,6 +55,8 @@ namespace Complete
 
         private void OnMixerInteractivtyStarted(object sender, InteractivityStateChangedEventArgs e)
         {
+            bool p1Joined = false;
+            bool p2Joined = false;
             if (MixerInteractive.InteractivityState == InteractivityState.InteractivityEnabled)
             {
                 MixerInteractive.SetCurrentScene("playerControls");
@@ -68,7 +72,16 @@ namespace Complete
                         label.SetText("Player 1 has joined");
                         //ev.Participant.UserID
                         ev.Participant.Group = MixerInteractive.GetGroup("controls");
+                        p1Joined = true;
                     }
+                    else if (ev.ControlID == "joinPlayer2")
+                    {
+                        label.SetText("Player 2 has joined");
+                        //ev.Participant.UserID
+                        ev.Participant.Group = MixerInteractive.GetGroup("controls");
+                        p2Joined = true;
+                    }
+                    _allPlayersJoined = p1Joined && p2Joined;
                 };
             }
         }
@@ -99,7 +112,7 @@ namespace Complete
         /// </summary>
         private IEnumerator GameLoop()
         {
-            //TODO: Waiting for two players to join
+            yield return StartCoroutine(WaitingForPlayers());
 
             yield return StartCoroutine(RoundStarting());
 
@@ -116,6 +129,14 @@ namespace Complete
                 // If there isn't a winner yet, restart this coroutine so the loop continues.
                 // Note that this coroutine doesn't yield. This means that the current version of the GameLoop will end.
                 StartCoroutine(GameLoop());
+            }
+        }
+
+        private IEnumerator WaitingForPlayers()
+        {
+            while(!_allPlayersJoined)
+            {
+                yield return null;
             }
         }
 
