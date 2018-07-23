@@ -25,13 +25,13 @@ namespace Assets.Scripts.Managers
         /// <summary>
         /// The scene that should be shown to users loading for the first time
         /// </summary>
-        public String ParticipantStartScene
+        public string ParticipantStartGroup
         {
             get
             {
-                return AllPlayersJoined ?
-                    OnlineConstants.SCENE_UPDATES :
-                    OnlineConstants.SCENE_LOBBY;
+                return AllPlayersJoined ? 
+                    OnlineConstants.GROUP_VIEWERS : 
+                    OnlineConstants.GROUP_START;
             }
         }
 

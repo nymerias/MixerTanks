@@ -241,12 +241,12 @@ Prefab:
     - target: {fileID: 114174615625054580, guid: e3d82ac56c3ea1f459a674ccc9c2622f,
         type: 2}
       propertyPath: groupIDs.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 114174615625054580, guid: e3d82ac56c3ea1f459a674ccc9c2622f,
         type: 2}
       propertyPath: sceneIDs.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4268897695578738, guid: e3d82ac56c3ea1f459a674ccc9c2622f, type: 2}
       propertyPath: m_LocalPosition.x
@@ -294,6 +294,26 @@ Prefab:
         type: 2}
       propertyPath: sceneIDs.Array.data[0]
       value: playerControls
+      objectReference: {fileID: 0}
+    - target: {fileID: 114174615625054580, guid: e3d82ac56c3ea1f459a674ccc9c2622f,
+        type: 2}
+      propertyPath: groupIDs.Array.data[1]
+      value: viewers
+      objectReference: {fileID: 0}
+    - target: {fileID: 114174615625054580, guid: e3d82ac56c3ea1f459a674ccc9c2622f,
+        type: 2}
+      propertyPath: sceneIDs.Array.data[1]
+      value: viewerUpdates
+      objectReference: {fileID: 0}
+    - target: {fileID: 114174615625054580, guid: e3d82ac56c3ea1f459a674ccc9c2622f,
+        type: 2}
+      propertyPath: sceneIDs.Array.data[2]
+      value: lobby
+      objectReference: {fileID: 0}
+    - target: {fileID: 114174615625054580, guid: e3d82ac56c3ea1f459a674ccc9c2622f,
+        type: 2}
+      propertyPath: groupIDs.Array.data[2]
+      value: start
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e3d82ac56c3ea1f459a674ccc9c2622f, type: 2}

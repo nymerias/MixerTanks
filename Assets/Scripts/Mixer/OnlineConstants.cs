@@ -7,7 +7,9 @@ namespace Assets.Scripts.Mixer
 {
     public class OnlineConstants
     {
+        public static String GROUP_START = "start";
         public static String GROUP_CONTROLS = "controls";
+        public static String GROUP_VIEWERS = "viewers";
 
         public static String SCENE_CONTROLS = "playerControls";
         public static String SCENE_LOBBY = "lobby";

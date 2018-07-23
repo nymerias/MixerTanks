@@ -6,6 +6,7 @@ using UnityEngine.Serialization;
 using System.Linq;
 using Microsoft.Mixer;
 using Assets.Scripts.Managers;
+using Assets.Scripts.Mixer;
 
 namespace Complete
 {
@@ -62,7 +63,7 @@ namespace Complete
         {
             if (MixerInteractive.InteractivityState == InteractivityState.InteractivityEnabled)
             {
-                MixerInteractive.SetCurrentScene(_stateMachine.ParticipantStartScene);
+                MixerInteractive.SetCurrentScene(OnlineConstants.SCENE_LOBBY);
 
                 _stateMachine.UpdateLobbyStatus();
                 _stateMachine.HandlePlayerJoins();
@@ -71,7 +72,7 @@ namespace Complete
 
         private void OnParticipantStateChange(object sender, InteractiveParticipantStateChangedEventArgs ev)
         {
-            ev.Participant.Group = MixerInteractive.GetGroup(_stateMachine.ParticipantStartScene);
+            ev.Participant.Group = MixerInteractive.GetGroup(_stateMachine.ParticipantStartGroup);
         }
 
         private void SpawnAllTanks()
