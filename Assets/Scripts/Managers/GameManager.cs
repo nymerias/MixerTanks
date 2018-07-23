@@ -57,13 +57,13 @@ namespace Complete
             {
                 MixerInteractive.SetCurrentScene("lobby");
 
-                var label = MixerInteractive.GetControl("status") as InteractiveLabelControl;
+                var label = MixerInteractive.GetControl("statusUpdate") as InteractiveLabelControl;
                 label.SetText("Waiting for players to join");
 
                 MixerInteractive.OnInteractiveButtonEvent += (source, ev) =>
                 {
                     //TODO: We will need to clean this up a bunch
-                    if (ev.ControlID == "player1")
+                    if (ev.ControlID == "joinPlayer1")
                     {
                         label.SetText("Player 1 has joined");
                         //ev.Participant.UserID
@@ -99,6 +99,8 @@ namespace Complete
         /// </summary>
         private IEnumerator GameLoop()
         {
+            //TODO: Waiting for two players to join
+
             yield return StartCoroutine(RoundStarting());
 
             yield return StartCoroutine(RoundPlaying());
