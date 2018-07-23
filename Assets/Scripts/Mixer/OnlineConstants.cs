@@ -5,8 +5,10 @@ using System.Text;
 
 namespace Assets.Scripts.Mixer
 {
-    class OnlineConstants
+    public class OnlineConstants
     {
+        public static String GROUP_CONTROLS = "controls";
+
         public static String SCENE_CONTROLS = "playerControls";
         public static String SCENE_LOBBY = "lobby";
         public static String SCENE_HELP = "giveHelp";

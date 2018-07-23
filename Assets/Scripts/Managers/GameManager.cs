@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Serialization;
 using System.Linq;
 using Microsoft.Mixer;
+using Assets.Scripts.Managers;
 
 namespace Complete
 {
@@ -36,12 +37,16 @@ namespace Complete
         [FormerlySerializedAsAttribute("m_GameWinner")]
         private TankManager _gameWinner;
 
-        private bool _allPlayersJoined = false;
+        [HideInInspector]
+        private InteractiveStateMachine _stateMachine;
 
         private void Start()
         {
+            _stateMachine = new InteractiveStateMachine();
+
             MixerInteractive.GoInteractive();
             MixerInteractive.OnInteractivityStateChanged += OnMixerInteractivtyStarted;
+            MixerInteractive.OnParticipantStateChanged += OnParticipantStateChange;
 
             _startWait = new WaitForSeconds(_startDelay);
             _endWait = new WaitForSeconds(_endDelay);
@@ -57,38 +62,16 @@ namespace Complete
         {
             if (MixerInteractive.InteractivityState == InteractivityState.InteractivityEnabled)
             {
-                MixerInteractive.SetCurrentScene("playerControls");
+                MixerInteractive.SetCurrentScene(_stateMachine.ParticipantStartScene);
 
-                bool p1Joined = false;
-                bool p2Joined = false;
-
-                var label = MixerInteractive.GetControl("statusUpdate") as InteractiveLabelControl;
-                label.SetText("Waiting for players to join");
-
-                MixerInteractive.OnInteractiveButtonEvent += (source, ev) =>
-                {
-                    if (ev.ControlID == "joinPlayer1")
-                    {
-                        MixerInteractive.GetControl(ev.ControlID).SetDisabled(true);
-
-                        label.SetText("Player 1 has joined");
-                        //ev.Participant.UserID
-                        ev.Participant.Group = MixerInteractive.GetGroup("controls");
-                        p1Joined = true;
-                    }
-                    else if (ev.ControlID == "joinPlayer2")
-                    {
-                        MixerInteractive.GetControl(ev.ControlID).SetDisabled(true);
-
-                        label.SetText("Player 2 has joined");
-                        //ev.Participant.UserID
-                        ev.Participant.Group = MixerInteractive.GetGroup("controls");
-                        p2Joined = true;
-                    }
-
-                    _allPlayersJoined = p1Joined && p2Joined;
-                };
+                _stateMachine.UpdateLobbyStatus();
+                _stateMachine.HandlePlayerJoins();
             }
+        }
+
+        private void OnParticipantStateChange(object sender, InteractiveParticipantStateChangedEventArgs ev)
+        {
+            ev.Participant.Group = MixerInteractive.GetGroup(_stateMachine.ParticipantStartScene);
         }
 
         private void SpawnAllTanks()
@@ -141,7 +124,7 @@ namespace Complete
         {
             _messageText.text = "WAITING FOR PLAYERS";
 
-            while (!_allPlayersJoined)
+            while (!_stateMachine.AllPlayersJoined)
             {
                 yield return null;
             }
