@@ -116,6 +116,18 @@ namespace Complete
         private void Move()
         {
             // Create a vector in the direction the tank is facing with a magnitude based on the input, speed and the time between frames.
+            if (MixerInteractive.GetButton("forward"))
+            {
+                _movementInputValue = 1;
+            } 
+            else if (MixerInteractive.GetButton("back"))
+            {
+                _movementInputValue = -1;
+            }
+            else
+            {
+                _movementInputValue = 0;
+            }
             Vector3 movement = transform.forward * _movementInputValue * _speed * Time.deltaTime;
             _rigidbody.MovePosition(_rigidbody.position + movement);
         }
