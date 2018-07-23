@@ -37,6 +37,8 @@ namespace Complete
 
         private void Start()
         {
+            MixerInteractive.GoInteractive();
+
             _startWait = new WaitForSeconds(_startDelay);
             _endWait = new WaitForSeconds(_endDelay);
 
