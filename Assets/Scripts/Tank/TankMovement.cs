@@ -116,11 +116,11 @@ namespace Complete
         private void Move()
         {
             // Create a vector in the direction the tank is facing with a magnitude based on the input, speed and the time between frames.
-            if (MixerInteractive.GetButton("forward"))
+            if (MixerInteractive.GetJoystickY("joystick") > 0)
             {
                 _movementInputValue = 1;
             } 
-            else if (MixerInteractive.GetButton("back"))
+            else if (MixerInteractive.GetJoystickY("joystick") < 0)
             {
                 _movementInputValue = -1;
             }
