@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Serialization;
 using System.Linq;
+using Microsoft.Mixer;
 
 namespace Complete
 {
@@ -38,6 +39,7 @@ namespace Complete
         private void Start()
         {
             MixerInteractive.GoInteractive();
+            MixerInteractive.OnInteractivityStateChanged += OnInteractivityStateChanged;
 
             _startWait = new WaitForSeconds(_startDelay);
             _endWait = new WaitForSeconds(_endDelay);
@@ -47,6 +49,14 @@ namespace Complete
 
             // Once the tanks have been created and the camera is using them as targets, start the game.
             StartCoroutine(GameLoop());
+        }
+
+        private void OnInteractivityStateChanged(object sender, InteractivityStateChangedEventArgs e)
+        {
+            if (MixerInteractive.InteractivityState == InteractivityState.InteractivityEnabled)
+            {
+                MixerInteractive.SetCurrentScene("lobby");
+            }
         }
 
         private void SpawnAllTanks()

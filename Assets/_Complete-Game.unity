@@ -273,7 +273,7 @@ Prefab:
     - target: {fileID: 114174615625054580, guid: e3d82ac56c3ea1f459a674ccc9c2622f,
         type: 2}
       propertyPath: defaultSceneID
-      value: Lobby
+      value: default
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e3d82ac56c3ea1f459a674ccc9c2622f, type: 2}
