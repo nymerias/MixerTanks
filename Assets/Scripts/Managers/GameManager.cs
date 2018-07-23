@@ -55,20 +55,22 @@ namespace Complete
 
         private void OnMixerInteractivtyStarted(object sender, InteractivityStateChangedEventArgs e)
         {
-            bool p1Joined = false;
-            bool p2Joined = false;
             if (MixerInteractive.InteractivityState == InteractivityState.InteractivityEnabled)
             {
                 MixerInteractive.SetCurrentScene("playerControls");
+
+                bool p1Joined = false;
+                bool p2Joined = false;
 
                 var label = MixerInteractive.GetControl("statusUpdate") as InteractiveLabelControl;
                 label.SetText("Waiting for players to join");
 
                 MixerInteractive.OnInteractiveButtonEvent += (source, ev) =>
                 {
-                    //TODO: We will need to clean this up a bunch
                     if (ev.ControlID == "joinPlayer1")
                     {
+                        MixerInteractive.GetControl(ev.ControlID).SetDisabled(true);
+
                         label.SetText("Player 1 has joined");
                         //ev.Participant.UserID
                         ev.Participant.Group = MixerInteractive.GetGroup("controls");
@@ -76,11 +78,14 @@ namespace Complete
                     }
                     else if (ev.ControlID == "joinPlayer2")
                     {
+                        MixerInteractive.GetControl(ev.ControlID).SetDisabled(true);
+
                         label.SetText("Player 2 has joined");
                         //ev.Participant.UserID
                         ev.Participant.Group = MixerInteractive.GetGroup("controls");
                         p2Joined = true;
                     }
+
                     _allPlayersJoined = p1Joined && p2Joined;
                 };
             }
@@ -134,7 +139,9 @@ namespace Complete
 
         private IEnumerator WaitingForPlayers()
         {
-            while(!_allPlayersJoined)
+            _messageText.text = "WAITING FOR PLAYERS";
+
+            while (!_allPlayersJoined)
             {
                 yield return null;
             }
