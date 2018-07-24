@@ -80,6 +80,9 @@ namespace Complete
 
             //Instantiate InteractivityManager
             manager = InteractivityManager.SingletonInstance;
+
+            //take out
+            participantId = MixerInteractive.Participants[0].UserID;
         }
 
         private void Update()
@@ -125,6 +128,7 @@ namespace Complete
         {
             // Create a vector in the direction the tank is facing with a magnitude based on the input, speed and the time between frames.
             JoystickVertical();
+            MoveVertical();
 
             Vector3 movement = transform.forward * _movementInputValue * _speed * Time.deltaTime;
             _rigidbody.MovePosition(_rigidbody.position + movement);
@@ -163,6 +167,39 @@ namespace Complete
                     _turnInputValue = 0;
                 }
         }
+  
+        private void MoveVertical()
+        {
+            if (manager.GetButton("forward").GetButtonPressed(participantId))
+            {
+                _movementInputValue = 1;
+            }
+            else if (manager.GetButton("back").GetButtonPressed(participantId))
+            {
+                _movementInputValue = -1;
+            }
+            else
+            {
+                _movementInputValue = 0;
+            }
+        }
+
+        //Move the tank horizontally
+        private void MoveHorizontal()
+        {
+            if (manager.GetButton("right").GetButtonPressed(participantId))
+            {
+                _turnInputValue = 1;
+            }
+            else if (manager.GetButton("left").GetButtonPressed(participantId))
+            {
+                _turnInputValue = -1;
+            }
+            else
+            {
+                _turnInputValue = 0;
+            }
+        }
 
 
         /// <summary>
@@ -171,6 +208,7 @@ namespace Complete
         private void Turn()
         {
             JoystickHorizontal();
+            MoveHorizontal();
 
             float turn = _turnInputValue * _turnSpeed * Time.deltaTime;
 
