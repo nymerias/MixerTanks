@@ -127,7 +127,7 @@ namespace Complete
         /// </summary>
         private void Move()
         {
-            Vector3 movement = transform.forward * _movementInputValue * _speed * _speedMultiplier * Time.deltaTime;            Vector3 movement = transform.forward * _movementInputValue * _speed * Time.deltaTime;
+            Vector3 movement = transform.forward * _movementInputValue * _speed * _speedMultiplier * Time.deltaTime;
             _rigidbody.MovePosition(_rigidbody.position + movement);
         }
 
