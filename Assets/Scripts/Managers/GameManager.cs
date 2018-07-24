@@ -33,13 +33,17 @@ namespace Complete
         private InteractiveStateMachine _stateMachine;
         private List<TankManager> _playerTanks;
 
+        private GiveHelpManager _giveHelpManager;
+
         private void Start()
         {
             _stateMachine = new InteractiveStateMachine();
-
+            _giveHelpManager = new GiveHelpManager();
+           
             MixerInteractive.GoInteractive();
             MixerInteractive.OnInteractivityStateChanged += OnMixerInteractivtyStarted;
             MixerInteractive.OnParticipantStateChanged += OnParticipantStateChange;
+            MixerInteractive.OnInteractiveButtonEvent += OnGiveHelp;
 
             _startWait = new WaitForSeconds(_startDelay);
             _endWait = new WaitForSeconds(_endDelay);
@@ -65,6 +69,20 @@ namespace Complete
                 ev.Participant.Group = MixerInteractive.GetGroup(_stateMachine.ParticipantStartGroup);
             }
             //TODO: We may want to handle the "leaving" state for any of the current set of players
+        }
+
+        private void OnGiveHelp(object sender, InteractiveButtonEventArgs ev)
+        {
+            if (ev.ControlID == OnlineConstants.CONTROL_HELP_RED)
+            {
+                _giveHelpManager.GiveHelp(_redPlayer);
+                MixerInteractive.TriggerCooldown(ev.ControlID, 10000);
+            }
+            else if (ev.ControlID == OnlineConstants.CONTROL_HELP_BLUE)
+            {
+                _giveHelpManager.GiveHelp(_bluePlayer);
+                MixerInteractive.TriggerCooldown(ev.ControlID, 10000);
+            }
         }
 
         /// <summary>
