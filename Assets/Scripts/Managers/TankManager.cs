@@ -14,6 +14,7 @@ namespace Complete
     [Serializable]
     public class TankManager
     {
+        public string _playerName;
         [FormerlySerializedAsAttribute("m_PlayerColor")]
         public Color _playerColor;
         [FormerlySerializedAsAttribute("m_SpawnPoint")]
@@ -24,14 +25,16 @@ namespace Complete
         [HideInInspector] public int _wins;
 
         [FormerlySerializedAsAttribute("m_Movement")]
-        private TankMovement _movement;
+        public TankMovement _movement;  //TODO: Make a getter/setter for this
         [FormerlySerializedAsAttribute("m_Shooting")]
-        private TankShooting _shooting;
+        public TankShooting _shooting;
         [FormerlySerializedAsAttribute("m_CanvasGameObject")]
         private GameObject _canvasGameObject;
 
         public void Setup()
         {
+            ToggleSounds(false);
+
             _movement = _instance.GetComponent<TankMovement>();
             _shooting = _instance.GetComponent<TankShooting>();
             _canvasGameObject = _instance.GetComponentInChildren<Canvas>().gameObject;
@@ -39,7 +42,7 @@ namespace Complete
             _movement._playerNumber = _playerNumber;
             _shooting._playerNumber = _playerNumber;
 
-            _coloredPlayerText = "<color=#" + ColorUtility.ToHtmlStringRGB(_playerColor) + ">PLAYER " + _playerNumber + "</color>";
+            _coloredPlayerText = "<color=#" + ColorUtility.ToHtmlStringRGB(_playerColor) + ">" + _playerName + "</color>";
 
             MeshRenderer[] renderers = _instance.GetComponentsInChildren<MeshRenderer>();
             renderers.ToList().ForEach(x => x.material.color = _playerColor);
@@ -61,6 +64,8 @@ namespace Complete
         /// </summary>
         public void EnableControl()
         {
+            ToggleSounds(true);
+
             _movement.enabled = true;
             _shooting.enabled = true;
 
@@ -77,6 +82,18 @@ namespace Complete
 
             _instance.SetActive(false);
             _instance.SetActive(true);
+        }
+
+        public void ToggleSounds(bool toggle)
+        {
+            var engineIdle = _instance.GetComponents<AudioSource>();
+            engineIdle.ToList().ForEach(x =>
+            {
+                if (toggle)
+                    x.Play();
+                else
+                    x.Stop();
+            });
         }
     }
 }

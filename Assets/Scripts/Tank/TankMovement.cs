@@ -83,8 +83,6 @@ namespace Complete
             //Instantiate InteractivityManager
             interactivityManager = InteractivityManager.SingletonInstance;
 
-            //take out
-            participantId = MixerInteractive.Participants[0].UserID;
             tankDirection = new TankDirection(participantId);
         }
 
