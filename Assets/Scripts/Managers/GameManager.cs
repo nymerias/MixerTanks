@@ -198,8 +198,7 @@ namespace Complete
         /// </summary>
         private IEnumerator DestroyGameSetup()
         {
-            MixerInteractive.SetCurrentScene(OnlineConstants.SCENE_LOBBY);
-
+            _stateMachine.SetAllParticipantsToLobby();
             _stateMachine.ResetToDefault();
 
             Destroy(_bluePlayer._instance);

@@ -58,6 +58,12 @@ namespace Assets.Scripts.Managers
                 .ForEach(p => p.Group = MixerInteractive.GetGroup(OnlineConstants.GROUP_HELP));
         }
 
+        public void SetAllParticipantsToLobby()
+        {
+            MixerInteractive.Participants.ToList()
+                .ForEach(p => p.Group = MixerInteractive.GetGroup(OnlineConstants.GROUP_START));
+        }
+
         public void ResetToDefault()
         {
             _p1Joined = _p2Joined = false;
