@@ -12,19 +12,13 @@ namespace Complete
 {
     public class GameManager : MonoBehaviour
     {
-        [FormerlySerializedAsAttribute("m_NumRoundsToWin")]
         public int _numRoundsToWin = 5;
-        [FormerlySerializedAsAttribute("m_StartDelay")]
         public float _startDelay = 3f;
-        [FormerlySerializedAsAttribute("m_EndDelay")]
         public float _endDelay = 3f;
-        [FormerlySerializedAsAttribute("m_CameraControl")]
+
         public CameraControl _cameraControl;       // Reference to the CameraControl script for control during different phases.
-        [FormerlySerializedAsAttribute("m_MessageText")]
         public Text _messageText;                  // Reference to the overlay Text to display winning text, etc.
-        [FormerlySerializedAsAttribute("m_TankPrefab")]
         public GameObject _tankPrefab;
-        [FormerlySerializedAsAttribute("m_Tanks")]
         public TankManager[] _tanks;               // A collection of managers for enabling and disabling different aspects of the tanks.
 
         [FormerlySerializedAsAttribute("m_RoundNumber")]
