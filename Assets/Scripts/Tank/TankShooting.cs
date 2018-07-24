@@ -28,7 +28,6 @@ namespace Complete
         [FormerlySerializedAsAttribute("m_MaxChargeTime")]
         public float _maxChargeTime = 0.75f;
 
-
         [FormerlySerializedAsAttribute("m_FireButton")]
         private string _fireButton;                // The input axis that is used for launching shells.
         [FormerlySerializedAsAttribute("m_CurrentLaunchForce")]
@@ -53,8 +52,6 @@ namespace Complete
 
             // The rate that the launch force charges up is the range of possible forces by the max charge time.
             _chargeSpeed = (_maxLaunchForce - _minLaunchForce) / _maxChargeTime;
-
-
         }
 
         private void Update()

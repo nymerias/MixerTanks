@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.Serialization;
 using System.Linq;
+using Microsoft.Mixer;
 
 namespace Complete
 {
@@ -31,6 +32,23 @@ namespace Complete
         [FormerlySerializedAsAttribute("m_CanvasGameObject")]
         private GameObject _canvasGameObject;
 
+        private InteractiveParticipant _participant;
+        public InteractiveParticipant OnlineParticipant
+        {
+            get { return _participant; }
+            set
+            {
+                _participant = value;
+                if (_participant != null)
+                {
+                    _movement.participantId = _participant.UserID;
+                    _shooting.participantId = _participant.UserID;
+
+                    _coloredPlayerText = "<color=#" + ColorUtility.ToHtmlStringRGB(_playerColor) + ">" + _participant.UserName + "</color>";
+                }
+            }
+        }
+
         public void Setup()
         {
             ToggleSounds(false);
@@ -41,8 +59,6 @@ namespace Complete
 
             _movement._playerNumber = _playerNumber;
             _shooting._playerNumber = _playerNumber;
-
-            _coloredPlayerText = "<color=#" + ColorUtility.ToHtmlStringRGB(_playerColor) + ">" + _playerName + "</color>";
 
             MeshRenderer[] renderers = _instance.GetComponentsInChildren<MeshRenderer>();
             renderers.ToList().ForEach(x => x.material.color = _playerColor);
