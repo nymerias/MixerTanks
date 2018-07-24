@@ -102,7 +102,7 @@ namespace Complete
                     _helpContract.setDefenceMultiplier(1f);
                     break;
             }
-            getLabel().SetText(red ? "Red's" : "Blue's" + boosts[action] + " has worn off!");
+            getLabel().SetText((red ? "Red's" : "Blue's") + boosts[action] + " has worn off!");
         }
 
     }
