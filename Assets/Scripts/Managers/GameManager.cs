@@ -103,7 +103,7 @@ namespace Complete
         {
             ResetGame();
 
-            yield return StartCoroutine(WaitingForPlayers());
+            //yield return StartCoroutine(WaitingForPlayers());
 
             yield return StartCoroutine(RoundStarting());
 

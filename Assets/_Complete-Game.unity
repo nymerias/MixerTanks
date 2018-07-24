@@ -603,13 +603,15 @@ MonoBehaviour:
   _messageText: {fileID: 102963701}
   _tankPrefab: {fileID: 173472, guid: 756d3a6506f2f8241b4e8badde68567a, type: 2}
   _tanks:
-  - _playerColor: {r: 0.16470589, g: 0.39215687, b: 0.69803923, a: 0}
+  - _playerName: BLUE
+    _playerColor: {r: 0.16470589, g: 0.39215687, b: 0.69803923, a: 0}
     _spawnPoint: {fileID: 194018016}
     _playerNumber: 0
     _coloredPlayerText: 
     _instance: {fileID: 0}
     _wins: 0
-  - _playerColor: {r: 0.8980392, g: 0.18039216, b: 0.15686275, a: 0}
+  - _playerName: RED
+    _playerColor: {r: 0.8980392, g: 0.18039216, b: 0.15686275, a: 0}
     _spawnPoint: {fileID: 2083660209}
     _playerNumber: 0
     _coloredPlayerText: 

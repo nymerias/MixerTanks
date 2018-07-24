@@ -14,6 +14,7 @@ namespace Complete
     [Serializable]
     public class TankManager
     {
+        public string _playerName;
         [FormerlySerializedAsAttribute("m_PlayerColor")]
         public Color _playerColor;
         [FormerlySerializedAsAttribute("m_SpawnPoint")]
@@ -41,7 +42,7 @@ namespace Complete
             _movement._playerNumber = _playerNumber;
             _shooting._playerNumber = _playerNumber;
 
-            _coloredPlayerText = "<color=#" + ColorUtility.ToHtmlStringRGB(_playerColor) + ">PLAYER " + _playerNumber + "</color>";
+            _coloredPlayerText = "<color=#" + ColorUtility.ToHtmlStringRGB(_playerColor) + ">" + _playerName + "</color>";
 
             MeshRenderer[] renderers = _instance.GetComponentsInChildren<MeshRenderer>();
             renderers.ToList().ForEach(x => x.material.color = _playerColor);
