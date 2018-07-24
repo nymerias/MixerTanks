@@ -127,9 +127,6 @@ namespace Complete
         /// </summary>
         private void Move()
         {
-            // Create a vector in the direction the tank is facing with a magnitude based on the input, speed and the time between frames.
-            _movementInputValue = tankDirection.VerticalDirection();
-
             Vector3 movement = transform.forward * _movementInputValue * _speed * _speedMultiplier * Time.deltaTime;            Vector3 movement = transform.forward * _movementInputValue * _speed * Time.deltaTime;
             _rigidbody.MovePosition(_rigidbody.position + movement);
         }
