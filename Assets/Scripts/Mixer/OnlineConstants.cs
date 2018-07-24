@@ -15,7 +15,6 @@ namespace Assets.Scripts.Mixer
         public static String SCENE_CONTROLS = "playerControls";
         public static String SCENE_LOBBY = "lobby";
         public static String SCENE_HELP = "giveHelp";
-        public static String SCENE_UPDATES = "viewerUpdates";
 
         public static String CONTROL_FORWARD = "forward";
         public static String CONTROL_LEFT = "left";
@@ -30,7 +29,5 @@ namespace Assets.Scripts.Mixer
         public static String CONTROL_HELP_RED = "helpRed";
         public static String CONTROL_HELP_BLUE = "helpBlue";
         public static String CONTROL_INFO_UPDATE = "infoUpdate";
-
-        public static String CONTROL_VIEWER_UPDATE = "viewerStatus";
     }
 }

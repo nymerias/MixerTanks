@@ -241,12 +241,12 @@ Prefab:
     - target: {fileID: 114174615625054580, guid: e3d82ac56c3ea1f459a674ccc9c2622f,
         type: 2}
       propertyPath: groupIDs.Array.size
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 114174615625054580, guid: e3d82ac56c3ea1f459a674ccc9c2622f,
         type: 2}
       propertyPath: sceneIDs.Array.size
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4268897695578738, guid: e3d82ac56c3ea1f459a674ccc9c2622f, type: 2}
       propertyPath: m_LocalPosition.x
@@ -298,22 +298,22 @@ Prefab:
     - target: {fileID: 114174615625054580, guid: e3d82ac56c3ea1f459a674ccc9c2622f,
         type: 2}
       propertyPath: groupIDs.Array.data[1]
-      value: viewers
+      value: start
       objectReference: {fileID: 0}
     - target: {fileID: 114174615625054580, guid: e3d82ac56c3ea1f459a674ccc9c2622f,
         type: 2}
       propertyPath: sceneIDs.Array.data[1]
-      value: viewerUpdates
-      objectReference: {fileID: 0}
-    - target: {fileID: 114174615625054580, guid: e3d82ac56c3ea1f459a674ccc9c2622f,
-        type: 2}
-      propertyPath: sceneIDs.Array.data[2]
       value: lobby
       objectReference: {fileID: 0}
     - target: {fileID: 114174615625054580, guid: e3d82ac56c3ea1f459a674ccc9c2622f,
         type: 2}
+      propertyPath: sceneIDs.Array.data[2]
+      value: giveHelp
+      objectReference: {fileID: 0}
+    - target: {fileID: 114174615625054580, guid: e3d82ac56c3ea1f459a674ccc9c2622f,
+        type: 2}
       propertyPath: groupIDs.Array.data[2]
-      value: start
+      value: help
       objectReference: {fileID: 0}
     - target: {fileID: 114174615625054580, guid: e3d82ac56c3ea1f459a674ccc9c2622f,
         type: 2}
@@ -623,6 +623,7 @@ MonoBehaviour:
     _movement: {fileID: 0}
     _shooting: {fileID: 0}
     _health: {fileID: 0}
+    _explosion: {fileID: 0}
   _bluePlayer:
     _playerName: BLUE
     _playerColor: {r: 0, g: 0.028794289, b: 1, a: 0}
@@ -634,6 +635,7 @@ MonoBehaviour:
     _movement: {fileID: 0}
     _shooting: {fileID: 0}
     _health: {fileID: 0}
+    _explosion: {fileID: 0}
 --- !u!4 &1304999366
 Transform:
   m_ObjectHideFlags: 0
