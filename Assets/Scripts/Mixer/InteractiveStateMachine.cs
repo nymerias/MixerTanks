@@ -47,6 +47,17 @@ namespace Assets.Scripts.Managers
             set;
         }
 
+        /// <summary>
+        /// Set everone who is not a player to the help group
+        /// </summary>
+        public void SetViewersToGiveHelp()
+        {
+            MixerInteractive.Participants
+                .Where(p => p != ParticipantOne && p != ParticipantTwo)
+                .ToList()
+                .ForEach(p => p.Group = MixerInteractive.GetGroup(OnlineConstants.GROUP_HELP));
+        }
+
         public void ResetToDefault()
         {
             _p1Joined = _p2Joined = false;
