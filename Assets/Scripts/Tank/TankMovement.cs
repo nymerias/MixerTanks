@@ -116,9 +116,7 @@ namespace Complete
                 Debug.Log("No participants yet, moving the tank not allowed");
                 return;
             }
-
-            //take out
-            participantId = MixerInteractive.Participants[0].UserID;
+            
             Move();
             Turn();
         }
