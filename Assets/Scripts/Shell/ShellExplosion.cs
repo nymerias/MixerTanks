@@ -19,6 +19,7 @@ namespace Complete
         public float _maxLifeTime = 2f;                    // The time in seconds before the shell is removed.
         [FormerlySerializedAsAttribute("m_ExplosionRadius")]
         public float _explosionRadius = 5f;                // The maximum distance away from the explosion tanks can be and are still affected.
+        public float _damageMultiplier = 1f;
 
         private void Start()
         {
@@ -63,7 +64,7 @@ namespace Complete
             float explosionDistance = explosionToTarget.magnitude;
             float relativeDistance = (_explosionRadius - explosionDistance) / _explosionRadius;
 
-            float damage = relativeDistance * _maxDamage;
+            float damage = relativeDistance * _maxDamage * _damageMultiplier;
             damage = Mathf.Max(0f, damage);
 
             return damage;

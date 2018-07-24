@@ -10,9 +10,9 @@ namespace Complete
     public interface HelpContract
     {
         void increaseHealth(int amount);
-        void setSpeedMultiplier(float speed);
-        void setAttackMultiplier(float attack);
-        void setDefenseMultiplier(float defense);
+        void setSpeedMultiplier(float multiplier);
+        void setAttackMultiplier(float multiplier);
+        void setDefenceMultiplier(float multiplier);
     }
 
     public class GiveHelpManager
@@ -32,15 +32,19 @@ namespace Complete
                 if (ev.ControlID == OnlineConstants.CONTROL_HELP_RED)
                 {
                     GiveHelp(true, action);
+                    TriggerCooldown(ev.ControlID);
                 }
                 else if (ev.ControlID == OnlineConstants.CONTROL_HELP_BLUE)
                 {
                     GiveHelp(false, action);
                 }
-
-                // Disable button for 10 seconds
-                MixerInteractive.TriggerCooldown(ev.ControlID, 10000);
             };
+        }
+
+        private void TriggerCooldown(String controlID)
+        {
+            // Disable button for 10 seconds
+            MixerInteractive.TriggerCooldown(controlID, 10000);
         }
 
         private InteractiveLabelControl getLabel()
@@ -62,7 +66,7 @@ namespace Complete
                     _helpContract.setAttackMultiplier(2f);
                     break;
                 case 3: // defense up
-                    _helpContract.setDefenseMultiplier(2f);
+                    _helpContract.setDefenceMultiplier(2f);
                     break;
             }
             getLabel().SetText("Gave " + boosts[action] + " to " + (red ? "Red!" : "Blue!"));
@@ -76,12 +80,14 @@ namespace Complete
         {
             Timer t = new Timer { Interval = 10000 };
             t.Elapsed += (sender, e) => ResetTankStatus(sender, e, red, action);
+            t.Start();
         }
 
         private void ResetTankStatus(object sender, ElapsedEventArgs e, bool red, int action)
         {
             // The state object is the Timer object.
             Timer t = (Timer)sender;
+            t.Stop();
             t.Dispose();
 
             switch (action)
@@ -93,7 +99,7 @@ namespace Complete
                     _helpContract.setAttackMultiplier(1f);
                     break;
                 case 3: // defense up
-                    _helpContract.setDefenseMultiplier(1f);
+                    _helpContract.setDefenceMultiplier(1f);
                     break;
             }
             getLabel().SetText(red ? "Red's" : "Blue's" + boosts[action] + " has worn off!");

@@ -12,6 +12,7 @@ namespace Complete
         public int _playerNumber = 1;
         [FormerlySerializedAsAttribute("m_Speed")]
         public float _speed = 12f;
+        public float _speedMultiplier = 1f;
         [FormerlySerializedAsAttribute("m_TurnSpeed")]
         public float _turnSpeed = 180f;
         [FormerlySerializedAsAttribute("m_MovementAudio")]
@@ -116,7 +117,7 @@ namespace Complete
                 Debug.Log("No participants yet, moving the tank not allowed");
                 return;
             }
-            
+
             Move();
             Turn();
         }
@@ -127,7 +128,9 @@ namespace Complete
         private void Move()
         {
             // Create a vector in the direction the tank is facing with a magnitude based on the input, speed and the time between frames.
-            Vector3 movement = transform.forward * _movementInputValue * _speed * Time.deltaTime;
+            _movementInputValue = tankDirection.VerticalDirection();
+
+            Vector3 movement = transform.forward * _movementInputValue * _speed * _speedMultiplier * Time.deltaTime;            Vector3 movement = transform.forward * _movementInputValue * _speed * Time.deltaTime;
             _rigidbody.MovePosition(_rigidbody.position + movement);
         }
 

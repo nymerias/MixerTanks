@@ -25,6 +25,7 @@ namespace Complete
         private ParticleSystem _explosionParticles;
         [FormerlySerializedAsAttribute("m_CurrentHealth")]
         private float _currentHealth;
+        public float _defenceMultiplier = 1f;
         [FormerlySerializedAsAttribute("m_Dead")]
         private bool _dead;
 
@@ -56,7 +57,7 @@ namespace Complete
 
         public void TakeDamage(float amount)
         {
-            _currentHealth -= amount;
+            _currentHealth -= amount * (1/_defenceMultiplier);
 
             SetHealthUI();
 

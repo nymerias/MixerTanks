@@ -32,6 +32,7 @@ namespace Complete
         [FormerlySerializedAsAttribute("m_Shooting")]
         public TankShooting _shooting;
         public TankHealth _health;
+        public ShellExplosion _explosion;
         [FormerlySerializedAsAttribute("m_CanvasGameObject")]
         private GameObject _canvasGameObject;
 
@@ -63,6 +64,7 @@ namespace Complete
             _movement = _instance.GetComponent<TankMovement>();
             _shooting = _instance.GetComponent<TankShooting>();
             _health = _instance.GetComponent<TankHealth>();
+            _explosion = _instance.GetComponent<ShellExplosion>();
 
             _canvasGameObject = _instance.GetComponentInChildren<Canvas>().gameObject;
 
@@ -127,20 +129,20 @@ namespace Complete
         {
              _health.ReceiveHelp(amount);
         }
-
-        public void setSpeedMultiplier(float speed)
+        
+        public void setSpeedMultiplier(float multiplier)
         {
-            //_movement._speed = "24f";
+            _movement._speedMultiplier = multiplier;
+        }
+        
+        public void setAttackMultiplier(float multiplier)
+        {
+            _explosion._damageMultiplier = multiplier;
         }
 
-        public void setAttackMultiplier(float attack)
+        public void setDefenceMultiplier(float multiplier)
         {
-
-        }
-
-        public void setDefenseMultiplier(float defense)
-        {
-
+            _health._defenceMultiplier = multiplier;
         }
     }
 }
