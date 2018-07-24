@@ -101,6 +101,8 @@ namespace Complete
         /// </summary>
         private IEnumerator GameLoop()
         {
+            ResetGame();
+
             yield return StartCoroutine(WaitingForPlayers());
 
             yield return StartCoroutine(RoundStarting());
@@ -121,6 +123,14 @@ namespace Complete
             }
         }
 
+        private void ResetGame()
+        {
+            ResetAllTanks();
+            DisableTankControl();
+
+            _cameraControl.SetStartPositionAndSize();
+        }
+
         private IEnumerator WaitingForPlayers()
         {
             _messageText.text = "WAITING FOR PLAYERS";
@@ -133,11 +143,6 @@ namespace Complete
 
         private IEnumerator RoundStarting()
         {
-            ResetAllTanks();
-            DisableTankControl();
-
-            _cameraControl.SetStartPositionAndSize();
-
             _roundNumber++;
             _messageText.text = "ROUND " + _roundNumber;
 

@@ -32,6 +32,8 @@ namespace Complete
 
         public void Setup()
         {
+            ToggleSounds(false);
+
             _movement = _instance.GetComponent<TankMovement>();
             _shooting = _instance.GetComponent<TankShooting>();
             _canvasGameObject = _instance.GetComponentInChildren<Canvas>().gameObject;
@@ -61,6 +63,8 @@ namespace Complete
         /// </summary>
         public void EnableControl()
         {
+            ToggleSounds(true);
+
             _movement.enabled = true;
             _shooting.enabled = true;
 
@@ -77,6 +81,18 @@ namespace Complete
 
             _instance.SetActive(false);
             _instance.SetActive(true);
+        }
+
+        public void ToggleSounds(bool toggle)
+        {
+            var engineIdle = _instance.GetComponents<AudioSource>();
+            engineIdle.ToList().ForEach(x =>
+            {
+                if (toggle)
+                    x.Play();
+                else
+                    x.Stop();
+            });
         }
     }
 }
