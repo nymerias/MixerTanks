@@ -2,6 +2,7 @@
 using UnityEngine.Serialization;
 using System.Linq;
 using Microsoft.Mixer;
+using System.Collections.Generic;
 
 namespace Complete
 {
@@ -38,18 +39,16 @@ namespace Complete
         private float _originalPitch;
         [FormerlySerializedAsAttribute("m_particleSystems")]
         private ParticleSystem[] _particleSystems;
-        [HideInInspector]
-        private InteractivityManager interactivityManager;
-
-        private TankDirection tankDirection;
 
         void Awake()
         {
+            Debug.Log("Awake called");
             _rigidbody = GetComponent<Rigidbody>();
         }
 
         void OnEnable()
         {
+            Debug.Log("OnEnable called");
             _rigidbody.isKinematic = false;
 
             _movementInputValue = 0f;
@@ -69,29 +68,21 @@ namespace Complete
         {
             _rigidbody.isKinematic = true;
             _particleSystems.ToList().ForEach(x => x.Stop());
+            TankDirection.Clear();
         }
 
         void Start()
         {
-            // The axes names are based on player number.
-            _movementAxisName = "Vertical" + _playerNumber;
-            _turnAxisName = "Horizontal" + _playerNumber;
+            Debug.Log("Start called");
 
             // Store the original pitch of the audio source.
             _originalPitch = _movementAudio.pitch;
-
-            //Instantiate InteractivityManager
-            interactivityManager = InteractivityManager.SingletonInstance;
-
-            //take out
-            participantId = MixerInteractive.Participants[0].UserID;
-            tankDirection = new TankDirection(participantId);
         }
 
         void Update()
         {
-            _movementInputValue = Input.GetAxis(_movementAxisName);
-            _turnInputValue = Input.GetAxis(_turnAxisName);
+            _movementInputValue = TankDirection.Instance(participantId).VerticalDirection();
+            _turnInputValue = TankDirection.Instance(participantId).HorizontalDirection();
 
             EngineAudio();
         }
@@ -120,6 +111,14 @@ namespace Complete
 
         void FixedUpdate()
         {
+            if (MixerInteractive.Participants.Count == 0)
+            {
+                Debug.Log("No participants yet, moving the tank not allowed");
+                return;
+            }
+
+            //take out
+            participantId = MixerInteractive.Participants[0].UserID;
             Move();
             Turn();
         }
@@ -130,8 +129,6 @@ namespace Complete
         private void Move()
         {
             // Create a vector in the direction the tank is facing with a magnitude based on the input, speed and the time between frames.
-            _movementInputValue = tankDirection.VerticalDirection();
-
             Vector3 movement = transform.forward * _movementInputValue * _speed * Time.deltaTime;
             _rigidbody.MovePosition(_rigidbody.position + movement);
         }
@@ -141,10 +138,7 @@ namespace Complete
         /// </summary>
         private void Turn()
         {
-            _turnInputValue = tankDirection.HorizontalDirection();
-
             float turn = _turnInputValue * _turnSpeed * Time.deltaTime;
-
             Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);
             _rigidbody.MoveRotation(_rigidbody.rotation * turnRotation);
         }
@@ -164,7 +158,24 @@ namespace Complete
 
         private uint userId;
 
-        public TankDirection(uint userId)
+        private static Dictionary<uint, TankDirection> tankMap = new Dictionary<uint, TankDirection>();
+
+        public static TankDirection Instance(uint userId)
+        {
+            if (!tankMap.ContainsKey(userId))
+            {
+                tankMap[userId] = new TankDirection(userId);
+            }
+
+            return tankMap[userId];
+        }
+
+        public static void Clear()
+        {
+            tankMap.Clear();
+        }
+
+        private TankDirection(uint userId)
         {
             this.userId = userId;
             forwardButton = InteractivityManager.SingletonInstance.GetButton("forward");
@@ -180,18 +191,19 @@ namespace Complete
                 movingForward = true;
                 movingBackward = false;
             }
+            else if (forwardButton.GetButtonUp(userId))
+            {
+                movingForward = false;
+                movingBackward = false;
+            }
             else if (backButton.GetButtonDown(userId))
             {
                 movingForward = false;
                 movingBackward = true;
             }
-
-            if (forwardButton.GetButtonUp(userId))
-            {
-                movingForward = false;
-            }
             else if (backButton.GetButtonUp(userId))
             {
+                movingForward = false;
                 movingBackward = false;
             }
 
@@ -215,31 +227,30 @@ namespace Complete
                 movingLeft = true;
                 movingRight = false;
             }
-
-            if (rightButton.GetButtonDown(userId))
+            else if (leftButton.GetButtonUp(userId))
+            {
+                movingLeft = false;
+                movingRight = false;
+            }
+            else if (rightButton.GetButtonDown(userId))
             {
                 movingLeft = false;
                 movingRight = true;
             }
-
-            if (leftButton.GetButtonUp(userId))
+            else if (rightButton.GetButtonUp(userId))
             {
                 movingLeft = false;
-            }
-
-            if (rightButton.GetButtonUp(userId))
-            {
                 movingRight = false;
-            }
-
-            if (movingRight)
-            {
-                return 1;
             }
 
             if (movingLeft)
             {
                 return -1;
+            }
+
+            if (movingRight)
+            {
+                return 1;
             }
 
             return 0;
