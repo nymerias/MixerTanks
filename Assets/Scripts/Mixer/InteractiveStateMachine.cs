@@ -29,10 +29,22 @@ namespace Assets.Scripts.Managers
         {
             get
             {
-                return AllPlayersJoined ? 
-                    OnlineConstants.GROUP_VIEWERS : 
+                return AllPlayersJoined ?
+                    OnlineConstants.GROUP_VIEWERS :
                     OnlineConstants.GROUP_START;
             }
+        }
+
+        public InteractiveParticipant ParticipantOne
+        {
+            get;
+            set;
+        }
+
+        public InteractiveParticipant ParticipantTwo
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -47,11 +59,13 @@ namespace Assets.Scripts.Managers
                 if (ev.ControlID == OnlineConstants.CONTROL_P1_JOIN)
                 {
                     _p1Joined = true;
+                    ParticipantOne = ev.Participant;
                     UpdateControlsAfterJoin(ev);
                 }
                 else if (ev.ControlID == OnlineConstants.CONTROL_P2_JOIN)
                 {
                     _p2Joined = true;
+                    ParticipantTwo = ev.Participant;
                     UpdateControlsAfterJoin(ev);
                 }
             };
