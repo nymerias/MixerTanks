@@ -76,20 +76,17 @@ namespace Complete
 
             yield return StartCoroutine(InitializeGame());
 
-            yield return StartCoroutine(RoundIsAboutToStart());
+            yield return StartCoroutine(PlayAllGameRounds());
 
-            yield return StartCoroutine(RoundIsPlaying());
-
-            yield return StartCoroutine(RoundHasEnded());
-
-            if (_gameWinner != null)
+            if (_gameWinner == null)
             {
-                SceneManager.LoadScene(0);
+                yield return StartCoroutine(PlayAllGameRounds());
             }
             else
             {
-                // If there isn't a winner yet, restart this coroutine so the loop continues.
-                // Note that this coroutine doesn't yield. This means that the current version of the GameLoop will end.
+                yield return StartCoroutine(DestroyGameSetup());
+
+                //This coroutine doesn't yield. Means that the previously-current version of the GameLoop will end.
                 StartCoroutine(GameLoop());
             }
         }
@@ -130,9 +127,17 @@ namespace Complete
         }
 
         /// <summary>
-        /// Game Loop Step 3: Show all users that the round is about to start
-        /// </summary>
-        /// <returns></returns>
+        /// A loopable function for all the game rounds
+        /// </summary
+        private IEnumerator PlayAllGameRounds()
+        {
+            yield return StartCoroutine(RoundIsAboutToStart());
+
+            yield return StartCoroutine(RoundIsPlaying());
+
+            yield return StartCoroutine(RoundHasEnded());
+        }
+
         private IEnumerator RoundIsAboutToStart()
         {
             //Disable control while we wait for the round number to disappear
@@ -150,9 +155,6 @@ namespace Complete
             yield return _startWait;
         }
 
-        /// <summary>
-        /// Game Loop Step 4: Current round in progress
-        /// </summary>
         private IEnumerator RoundIsPlaying()
         {
             //Now enable so users can play the game
@@ -166,9 +168,6 @@ namespace Complete
             }
         }
 
-        /// <summary>
-        /// Game Loop Step 5: Current round has ended
-        /// </summary>
         private IEnumerator RoundHasEnded()
         {
             _playerTanks.ToList().ForEach(x => x.DisableControl());
@@ -185,6 +184,19 @@ namespace Complete
             _messageText.text = message;
 
             yield return _endWait;
+        }
+
+        private IEnumerator DestroyGameSetup()
+        {
+            Destroy(_bluePlayer._instance);
+            Destroy(_redPlayer._instance);
+
+            _bluePlayer.OnlineParticipant = null;
+            _redPlayer.OnlineParticipant = null;
+
+            _cameraControl._targets = null;
+
+            yield return null;
         }
 
         /// <summary>
@@ -208,13 +220,7 @@ namespace Complete
         /// </summary>
         private TankManager GetRoundWinner()
         {
-            //for (int i = 0; i < _tanks.Length; i++)
-            //{
-            //    if (_tanks[i]._instance.activeSelf)
-            //        return _tanks[i];
-            //}
-
-            return null;    // If null it is a draw
+            return _playerTanks.FirstOrDefault(tank => tank._instance.activeSelf);
         }
 
         /// <summary>
@@ -223,7 +229,7 @@ namespace Complete
         private TankManager GetGameWinner()
         {
             // If no tanks have enough rounds to win, return null.
-            return _playerTanks.First(tank => tank._wins == _numRoundsToWin);
+            return _playerTanks.FirstOrDefault(tank => tank._wins == _numRoundsToWin);
         }
 
         /// <summary>

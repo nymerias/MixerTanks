@@ -39,8 +39,13 @@ namespace Complete
             set
             {
                 _participant = value;
-                _movement.participantId = _participant.UserID;
-                _shooting.participantId = _participant.UserID;
+                if (_participant != null)
+                {
+                    _movement.participantId = _participant.UserID;
+                    _shooting.participantId = _participant.UserID;
+
+                    _coloredPlayerText = "<color=#" + ColorUtility.ToHtmlStringRGB(_playerColor) + ">" + _participant.UserName + "</color>";
+                }
             }
         }
 
@@ -54,8 +59,6 @@ namespace Complete
 
             _movement._playerNumber = _playerNumber;
             _shooting._playerNumber = _playerNumber;
-
-            _coloredPlayerText = "<color=#" + ColorUtility.ToHtmlStringRGB(_playerColor) + ">" + OnlineParticipant.UserName + "</color>";
 
             MeshRenderer[] renderers = _instance.GetComponentsInChildren<MeshRenderer>();
             renderers.ToList().ForEach(x => x.material.color = _playerColor);

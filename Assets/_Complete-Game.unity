@@ -596,7 +596,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54a000792783c934885973b761b3f96f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _numRoundsToWin: 3
+  _numRoundsToWin: 2
   _startDelay: 3
   _endDelay: 3
   _cameraControl: {fileID: 1771596988}
@@ -615,7 +615,7 @@ MonoBehaviour:
   _bluePlayer:
     _playerName: BLUE
     _playerColor: {r: 0, g: 0.028794289, b: 1, a: 0}
-    _spawnPoint: {fileID: 194018016}
+    _spawnPoint: {fileID: 2083660209}
     _playerNumber: 0
     _coloredPlayerText: 
     _instance: {fileID: 0}
