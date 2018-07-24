@@ -53,38 +53,18 @@ namespace Complete
 
             // The rate that the launch force charges up is the range of possible forces by the max charge time.
             _chargeSpeed = (_maxLaunchForce - _minLaunchForce) / _maxChargeTime;
-        }
 
-        private void UpdateOld()
-        {
-            _aimSlider.value = _minLaunchForce;
 
-            if (_currentLaunchForce >= _maxLaunchForce && !_fired)
-            {
-                _currentLaunchForce = _maxLaunchForce;
-                Fire();
-            }
-            else if (Input.GetButtonDown(_fireButton))
-            {
-                _fired = false;
-                _currentLaunchForce = _minLaunchForce;
-
-                _shootingAudio.clip = _chargingClip;
-                _shootingAudio.Play();
-            }
-            else if (Input.GetButton(_fireButton) && !_fired)
-            {
-                _currentLaunchForce += _chargeSpeed * Time.deltaTime;
-                _aimSlider.value = _currentLaunchForce;
-            }
-            else if (Input.GetButtonUp(_fireButton) && !_fired)
-            {
-                Fire();
-            }
         }
 
         private void Update()
         {
+            if (MixerInteractive.Participants.Count == 0)
+            {
+                Debug.Log("No participants yet, firing not allowed");
+                return;
+            }
+
             _aimSlider.value = _minLaunchForce;
 
             if (_currentLaunchForce >= _maxLaunchForce && !_fired)
