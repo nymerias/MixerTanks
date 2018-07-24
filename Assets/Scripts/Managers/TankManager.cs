@@ -53,13 +53,9 @@ namespace Complete
             }
         }
 
-        private GiveHelpManager _giveHelpManager = new GiveHelpManager();
-
         public void Setup()
         {
             ToggleSounds(false);
-
-            _giveHelpManager.SetUpGiveHelp(this);
 
             _movement = _instance.GetComponent<TankMovement>();
             _shooting = _instance.GetComponent<TankShooting>();
@@ -124,6 +120,10 @@ namespace Complete
         }
 
         // Methods for the HelpContract
+        public String getUsername()
+        {
+            return OnlineParticipant.UserName;
+        }
 
         public void increaseHealth(int amount)
         {
