@@ -28,7 +28,7 @@ namespace Complete
         private WaitForSeconds _startWait;
         private WaitForSeconds _endWait;
         private TankManager _roundWinner;
-        private TankManager _gameWinner;
+        private TankManager _gameWinner = null;
 
         private InteractiveStateMachine _stateMachine;
         private List<TankManager> _playerTanks;
@@ -78,17 +78,10 @@ namespace Complete
 
             yield return StartCoroutine(PlayAllGameRounds());
 
-            if (_gameWinner == null)
-            {
-                yield return StartCoroutine(PlayAllGameRounds());
-            }
-            else
-            {
-                yield return StartCoroutine(DestroyGameSetup());
+            yield return StartCoroutine(DestroyGameSetup());
 
-                //This coroutine doesn't yield. Means that the previously-current version of the GameLoop will end.
-                StartCoroutine(GameLoop());
-            }
+            //This coroutine doesn't yield. Means that the previously-current version of the GameLoop will end.
+            StartCoroutine(GameLoop());
         }
 
         /// <summary>
@@ -131,11 +124,14 @@ namespace Complete
         /// </summary
         private IEnumerator PlayAllGameRounds()
         {
-            yield return StartCoroutine(RoundIsAboutToStart());
+            while (_gameWinner == null)
+            {
+                yield return StartCoroutine(RoundIsAboutToStart());
 
-            yield return StartCoroutine(RoundIsPlaying());
+                yield return StartCoroutine(RoundIsPlaying());
 
-            yield return StartCoroutine(RoundHasEnded());
+                yield return StartCoroutine(RoundHasEnded());
+            }
         }
 
         private IEnumerator RoundIsAboutToStart()
@@ -188,13 +184,15 @@ namespace Complete
 
         private IEnumerator DestroyGameSetup()
         {
+            _stateMachine.ResetToDefault();
+
             Destroy(_bluePlayer._instance);
             Destroy(_redPlayer._instance);
 
             _bluePlayer.OnlineParticipant = null;
             _redPlayer.OnlineParticipant = null;
 
-            _cameraControl._targets = null;
+            _cameraControl._targets = new Transform[0];
 
             yield return null;
         }
@@ -220,7 +218,14 @@ namespace Complete
         /// </summary>
         private TankManager GetRoundWinner()
         {
-            return _playerTanks.FirstOrDefault(tank => tank._instance.activeSelf);
+            var tankArray = _playerTanks.ToArray();
+            for (int i = 0; i < tankArray.Length; i++)
+            {
+                if (tankArray[i]._instance.activeSelf)
+                    return tankArray[i];
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -228,8 +233,14 @@ namespace Complete
         /// </summary>
         private TankManager GetGameWinner()
         {
-            // If no tanks have enough rounds to win, return null.
-            return _playerTanks.FirstOrDefault(tank => tank._wins == _numRoundsToWin);
+            var tankArray = _playerTanks.ToArray();
+            for (int i = 0; i < tankArray.Length; i++)
+            {
+                if (tankArray[i]._wins == _numRoundsToWin)
+                    return tankArray[i];
+            }
+
+            return null;
         }
 
         /// <summary>

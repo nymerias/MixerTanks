@@ -47,26 +47,39 @@ namespace Assets.Scripts.Managers
             set;
         }
 
+        public void ResetToDefault()
+        {
+            _p1Joined = _p2Joined = false;
+            ParticipantOne = null;
+            ParticipantTwo = null;
+
+            MixerInteractive.OnInteractiveButtonEvent -= OnJoinButtonEvents;
+
+            UpdateLobbyStatus();
+        }
+
         /// <summary>
         /// Facilitate the lobby player join events
         /// </summary>
         public void HandlePlayerJoins()
         {
-            MixerInteractive.OnInteractiveButtonEvent += (source, ev) =>
+            MixerInteractive.OnInteractiveButtonEvent += OnJoinButtonEvents;
+        }
+
+        private void OnJoinButtonEvents(object sender, InteractiveButtonEventArgs ev)
+        {
+            if (ev.ControlID == OnlineConstants.CONTROL_P1_JOIN)
             {
-                if (ev.ControlID == OnlineConstants.CONTROL_P1_JOIN)
-                {
-                    _p1Joined = true;
-                    ParticipantOne = ev.Participant;
-                    UpdateControlsAfterJoin(ev);
-                }
-                else if (ev.ControlID == OnlineConstants.CONTROL_P2_JOIN)
-                {
-                    _p2Joined = true;
-                    ParticipantTwo = ev.Participant;
-                    UpdateControlsAfterJoin(ev);
-                }
-            };
+                _p1Joined = true;
+                ParticipantOne = ev.Participant;
+                UpdateControlsAfterJoin(ev);
+            }
+            else if (ev.ControlID == OnlineConstants.CONTROL_P2_JOIN)
+            {
+                _p2Joined = true;
+                ParticipantTwo = ev.Participant;
+                UpdateControlsAfterJoin(ev);
+            }
         }
 
         private void UpdateControlsAfterJoin(InteractiveButtonEventArgs ev)

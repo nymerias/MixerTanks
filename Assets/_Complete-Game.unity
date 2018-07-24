@@ -596,7 +596,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54a000792783c934885973b761b3f96f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _numRoundsToWin: 2
+  _numRoundsToWin: 3
   _startDelay: 3
   _endDelay: 3
   _cameraControl: {fileID: 1771596988}
