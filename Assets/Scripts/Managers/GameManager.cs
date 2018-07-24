@@ -116,6 +116,8 @@ namespace Complete
 
             _cameraControl._targets = _playerTanks.Select(tank => tank._instance.transform).ToArray();
 
+            _stateMachine.SetViewersToGiveHelp();
+
             yield return null;
         }
 
@@ -196,6 +198,7 @@ namespace Complete
         /// </summary>
         private IEnumerator DestroyGameSetup()
         {
+            _stateMachine.SetAllParticipantsToLobby();
             _stateMachine.ResetToDefault();
 
             Destroy(_bluePlayer._instance);

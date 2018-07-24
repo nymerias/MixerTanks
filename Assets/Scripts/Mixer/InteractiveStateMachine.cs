@@ -47,6 +47,23 @@ namespace Assets.Scripts.Managers
             set;
         }
 
+        /// <summary>
+        /// Set everone who is not a player to the help group
+        /// </summary>
+        public void SetViewersToGiveHelp()
+        {
+            MixerInteractive.Participants
+                .Where(p => p != ParticipantOne && p != ParticipantTwo)
+                .ToList()
+                .ForEach(p => p.Group = MixerInteractive.GetGroup(OnlineConstants.GROUP_HELP));
+        }
+
+        public void SetAllParticipantsToLobby()
+        {
+            MixerInteractive.Participants.ToList()
+                .ForEach(p => p.Group = MixerInteractive.GetGroup(OnlineConstants.GROUP_START));
+        }
+
         public void ResetToDefault()
         {
             _p1Joined = _p2Joined = false;
@@ -54,6 +71,8 @@ namespace Assets.Scripts.Managers
             ParticipantTwo = null;
 
             MixerInteractive.OnInteractiveButtonEvent -= OnJoinButtonEvents;
+            MixerInteractive.GetControl(OnlineConstants.CONTROL_P1_JOIN).SetDisabled(false);
+            MixerInteractive.GetControl(OnlineConstants.CONTROL_P2_JOIN).SetDisabled(false);
 
             UpdateLobbyStatus();
         }
