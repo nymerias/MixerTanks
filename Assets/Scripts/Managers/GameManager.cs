@@ -120,7 +120,7 @@ namespace Complete
         }
 
         /// <summary>
-        /// A loopable function for all the game rounds
+        /// Game Loop Step 3: Play all the game rounds till there is a winner
         /// </summary
         private IEnumerator PlayAllGameRounds()
         {
@@ -134,6 +134,9 @@ namespace Complete
             }
         }
 
+        /// <summary>
+        /// Step 3, Part 1: Reset and get the round ready
+        /// </summary>
         private IEnumerator RoundIsAboutToStart()
         {
             //Disable control while we wait for the round number to disappear
@@ -151,6 +154,9 @@ namespace Complete
             yield return _startWait;
         }
 
+        /// <summary>
+        /// Step 3, Part 2: Current round, go till there is a winner
+        /// </summary>
         private IEnumerator RoundIsPlaying()
         {
             //Now enable so users can play the game
@@ -164,6 +170,9 @@ namespace Complete
             }
         }
 
+        /// <summary>
+        /// Step 3, Part3: Round has ended, get ready for future rounds, look for winners
+        /// </summary>
         private IEnumerator RoundHasEnded()
         {
             _playerTanks.ToList().ForEach(x => x.DisableControl());
@@ -182,6 +191,9 @@ namespace Complete
             yield return _endWait;
         }
 
+        /// <summary>
+        /// Game Loop Step 4: Reset for new players
+        /// </summary>
         private IEnumerator DestroyGameSetup()
         {
             _stateMachine.ResetToDefault();
