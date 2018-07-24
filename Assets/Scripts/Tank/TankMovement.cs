@@ -39,14 +39,16 @@ namespace Complete
         [FormerlySerializedAsAttribute("m_particleSystems")]
         private ParticleSystem[] _particleSystems;
         [HideInInspector]
-        private InteractivityManager manager;
+        private InteractivityManager interactivityManager;
 
-        private void Awake()
+        private TankDirection tankDirection;
+
+        void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
         }
 
-        private void OnEnable()
+        void OnEnable()
         {
             _rigidbody.isKinematic = false;
 
@@ -69,7 +71,7 @@ namespace Complete
             _particleSystems.ToList().ForEach(x => x.Stop());
         }
 
-        private void Start()
+        void Start()
         {
             // The axes names are based on player number.
             _movementAxisName = "Vertical" + _playerNumber;
@@ -79,13 +81,14 @@ namespace Complete
             _originalPitch = _movementAudio.pitch;
 
             //Instantiate InteractivityManager
-            manager = InteractivityManager.SingletonInstance;
+            interactivityManager = InteractivityManager.SingletonInstance;
 
             //take out
             participantId = MixerInteractive.Participants[0].UserID;
+            tankDirection = new TankDirection(participantId);
         }
 
-        private void Update()
+        void Update()
         {
             _movementInputValue = Input.GetAxis(_movementAxisName);
             _turnInputValue = Input.GetAxis(_turnAxisName);
@@ -93,7 +96,7 @@ namespace Complete
             EngineAudio();
         }
 
-        private void EngineAudio()
+        void EngineAudio()
         {
             // If there is no input the tank is stationary
             if (Mathf.Abs(_movementInputValue) < 0.1f && Mathf.Abs(_turnInputValue) < 0.1f)
@@ -115,7 +118,7 @@ namespace Complete
             }
         }
 
-        private void FixedUpdate()
+        void FixedUpdate()
         {
             Move();
             Turn();
@@ -127,93 +130,119 @@ namespace Complete
         private void Move()
         {
             // Create a vector in the direction the tank is facing with a magnitude based on the input, speed and the time between frames.
-            JoystickVertical();
-            MoveVertical();
+            _movementInputValue = tankDirection.VerticalDirection();
 
             Vector3 movement = transform.forward * _movementInputValue * _speed * Time.deltaTime;
             _rigidbody.MovePosition(_rigidbody.position + movement);
         }
-    
-       //Move the tank vertically
-       private void JoystickVertical()
-        {
-            if (manager.GetJoystick("joystick").GetY(participantId) > 0)
-            {
-                _movementInputValue = 1;
-            }
-            else if (manager.GetJoystick("joystick").GetY(participantId) < 0)
-            {
-                _movementInputValue = -1;
-            }
-            else
-            {
-                _movementInputValue = 0;
-            }
-        }
-
-        //Move the tank horizontally
-        private void JoystickHorizontal()
-        {
-            if (manager.GetJoystick("joystick").GetX(participantId) > 0)
-                {
-                    _turnInputValue = 1;
-                }
-                else if (manager.GetJoystick("joystick").GetX(participantId) < 0)
-                {
-                    _turnInputValue = -1;
-                }
-                else
-                {
-                    _turnInputValue = 0;
-                }
-        }
-  
-        private void MoveVertical()
-        {
-            if (manager.GetButton("forward").GetButtonPressed(participantId))
-            {
-                _movementInputValue = 1;
-            }
-            else if (manager.GetButton("back").GetButtonPressed(participantId))
-            {
-                _movementInputValue = -1;
-            }
-            else
-            {
-                _movementInputValue = 0;
-            }
-        }
-
-        //Move the tank horizontally
-        private void MoveHorizontal()
-        {
-            if (manager.GetButton("right").GetButtonPressed(participantId))
-            {
-                _turnInputValue = 1;
-            }
-            else if (manager.GetButton("left").GetButtonPressed(participantId))
-            {
-                _turnInputValue = -1;
-            }
-            else
-            {
-                _turnInputValue = 0;
-            }
-        }
-
 
         /// <summary>
         /// Rotate the tank by rotating the rigid body
         /// </summary>
         private void Turn()
         {
-            JoystickHorizontal();
-            MoveHorizontal();
+            _turnInputValue = tankDirection.HorizontalDirection();
 
             float turn = _turnInputValue * _turnSpeed * Time.deltaTime;
 
             Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);
             _rigidbody.MoveRotation(_rigidbody.rotation * turnRotation);
+        }
+    }
+
+    public class TankDirection
+    {
+        private InteractiveButtonControl forwardButton;
+        private InteractiveButtonControl backButton;
+        private InteractiveButtonControl leftButton;
+        private InteractiveButtonControl rightButton;
+
+        private bool movingForward;
+        private bool movingBackward;
+        private bool movingLeft;
+        private bool movingRight;
+
+        private uint userId;
+
+        public TankDirection(uint userId)
+        {
+            this.userId = userId;
+            forwardButton = InteractivityManager.SingletonInstance.GetButton("forward");
+            backButton = InteractivityManager.SingletonInstance.GetButton("back");
+            leftButton = InteractivityManager.SingletonInstance.GetButton("left");
+            rightButton = InteractivityManager.SingletonInstance.GetButton("right");
+        }
+
+        public float VerticalDirection()
+        {
+            if (forwardButton.GetButtonDown(userId))
+            {
+                movingForward = true;
+                movingBackward = false;
+            }
+            else if (backButton.GetButtonDown(userId))
+            {
+                movingForward = false;
+                movingBackward = true;
+            }
+
+            if (forwardButton.GetButtonUp(userId))
+            {
+                movingForward = false;
+            }
+            else if (backButton.GetButtonUp(userId))
+            {
+                movingBackward = false;
+            }
+
+            if (movingForward)
+            {
+                return 1;
+            }
+
+            if (movingBackward)
+            {
+                return -1;
+            }
+
+            return 0;
+        }
+
+        public float HorizontalDirection()
+        {
+            if (leftButton.GetButtonDown(userId))
+            {
+                movingLeft = true;
+                movingRight = false;
+            }
+
+            if (rightButton.GetButtonDown(userId))
+            {
+                movingLeft = false;
+                movingRight = true;
+            }
+
+            if (leftButton.GetButtonUp(userId))
+            {
+                movingLeft = false;
+            }
+
+            if (rightButton.GetButtonUp(userId))
+            {
+                movingRight = false;
+            }
+
+            if (movingRight)
+            {
+                return 1;
+            }
+
+            if (movingLeft)
+            {
+                return -1;
+            }
+
+            return 0;
         }
     }
 }
