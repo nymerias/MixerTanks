@@ -7,6 +7,7 @@ using System.Linq;
 using Microsoft.Mixer;
 using Assets.Scripts.Managers;
 using Assets.Scripts.Mixer;
+using System.Collections.Generic;
 
 namespace Complete
 {
@@ -19,7 +20,9 @@ namespace Complete
         public CameraControl _cameraControl;       // Reference to the CameraControl script for control during different phases.
         public Text _messageText;                  // Reference to the overlay Text to display winning text, etc.
         public GameObject _tankPrefab;
-        public TankManager[] _tanks;               // A collection of managers for enabling and disabling different aspects of the tanks.
+
+        public TankManager _redPlayer;
+        public TankManager _bluePlayer;
 
         private int _roundNumber;
         private WaitForSeconds _startWait;
@@ -41,8 +44,8 @@ namespace Complete
             _startWait = new WaitForSeconds(_startDelay);
             _endWait = new WaitForSeconds(_endDelay);
 
-            SpawnAllTanks();
-            SetCameraTargets();
+            //SpawnAllTanks();
+            //SetCameraTargets();
 
             // Once the tanks have been created and the camera is using them as targets, start the game.
             StartCoroutine(GameLoop());
@@ -64,33 +67,12 @@ namespace Complete
             ev.Participant.Group = MixerInteractive.GetGroup(_stateMachine.ParticipantStartGroup);
         }
 
-        private void SpawnAllTanks()
-        {
-            foreach (var item in _tanks.Select((val, idx) => new { Tank = val, Index = idx }))
-            {
-                item.Tank._instance = Instantiate(_tankPrefab, item.Tank._spawnPoint.position, item.Tank._spawnPoint.rotation) as GameObject;
-                item.Tank._playerNumber = item.Index + 1;
-                item.Tank.Setup();
-            }
-        }
-
-        private void SetCameraTargets()
-        {
-            Transform[] targets = new Transform[_tanks.Length];
-            for (int i = 0; i < targets.Length; i++)
-            {
-                targets[i] = _tanks[i]._instance.transform;
-            }
-
-            _cameraControl._targets = targets;
-        }
-
         /// <summary>
         /// Called from start and will run each phase of the game one after another.
         /// </summary>
         private IEnumerator GameLoop()
         {
-            ResetGame();
+            //ResetGame();
 
             yield return StartCoroutine(WaitingForPlayers());
 
@@ -110,6 +92,24 @@ namespace Complete
                 // Note that this coroutine doesn't yield. This means that the current version of the GameLoop will end.
                 StartCoroutine(GameLoop());
             }
+        }
+
+        private List<TankManager> _playerTanks;
+
+        private void SpawnAllTanks()
+        {
+            _playerTanks = new List<TankManager> { _redPlayer, _bluePlayer };
+            _playerTanks.ForEach(tank =>
+            {
+                var currentTank = Instantiate(_tankPrefab, tank._spawnPoint.position, tank._spawnPoint.rotation);
+                tank._instance = currentTank;
+                tank.Setup();
+            });
+        }
+
+        private void SetCameraTargets()
+        {
+            _cameraControl._targets = _playerTanks.Select(tank => tank._instance.transform).ToArray();
         }
 
         private void ResetGame()
@@ -135,11 +135,11 @@ namespace Complete
             _roundNumber++;
             _messageText.text = "ROUND " + _roundNumber;
 
-            _tanks[1]._movement.participantId = _stateMachine.ParticipantOne.UserID;
-            _tanks[1]._shooting.participantId = _stateMachine.ParticipantOne.UserID;
+            //_tanks[1]._movement.participantId = _stateMachine.ParticipantOne.UserID;
+            //_tanks[1]._shooting.participantId = _stateMachine.ParticipantOne.UserID;
 
-            _tanks[0]._movement.participantId = _stateMachine.ParticipantTwo.UserID;
-            _tanks[0]._shooting.participantId = _stateMachine.ParticipantTwo.UserID;
+            //_tanks[0]._movement.participantId = _stateMachine.ParticipantTwo.UserID;
+            //_tanks[0]._shooting.participantId = _stateMachine.ParticipantTwo.UserID;
 
             yield return _startWait;
         }
@@ -180,11 +180,11 @@ namespace Complete
         private bool OneTankLeft()
         {
             int numTanksLeft = 0;
-            for (int i = 0; i < _tanks.Length; i++)
+            _playerTanks.ForEach(tank =>
             {
-                if (_tanks[i]._instance.activeSelf)
+                if (tank._instance.activeSelf)
                     numTanksLeft++;
-            }
+            });
 
             return numTanksLeft <= 1;
         }
@@ -195,11 +195,11 @@ namespace Complete
         /// </summary>
         private TankManager GetRoundWinner()
         {
-            for (int i = 0; i < _tanks.Length; i++)
-            {
-                if (_tanks[i]._instance.activeSelf)
-                    return _tanks[i];
-            }
+            //for (int i = 0; i < _tanks.Length; i++)
+            //{
+            //    if (_tanks[i]._instance.activeSelf)
+            //        return _tanks[i];
+            //}
 
             return null;    // If null it is a draw
         }
@@ -209,11 +209,11 @@ namespace Complete
         /// </summary>
         private TankManager GetGameWinner()
         {
-            for (int i = 0; i < _tanks.Length; i++)
-            {
-                if (_tanks[i]._wins == _numRoundsToWin)
-                    return _tanks[i];
-            }
+            //for (int i = 0; i < _tanks.Length; i++)
+            //{
+            //    if (_tanks[i]._wins == _numRoundsToWin)
+            //        return _tanks[i];
+            //}
 
             // If no tanks have enough rounds to win, return null.
             return null;
@@ -232,10 +232,14 @@ namespace Complete
             message += "\n\n\n\n";
 
             // Go through all the tanks and add each of their scores to the message.
-            for (int i = 0; i < _tanks.Length; i++)
+            //for (int i = 0; i < _tanks.Length; i++)
+            //{
+            //    message += _tanks[i]._coloredPlayerText + ": " + _tanks[i]._wins + " WINS\n";
+            //}
+            _playerTanks.ForEach(tank =>
             {
-                message += _tanks[i]._coloredPlayerText + ": " + _tanks[i]._wins + " WINS\n";
-            }
+                message += tank._coloredPlayerText + ": " + tank._wins + " WINS\n";
+            });
 
             if (_gameWinner != null)
                 message = _gameWinner._coloredPlayerText + " WINS THE GAME!";
@@ -248,17 +252,17 @@ namespace Complete
         /// </summary>
         private void ResetAllTanks()
         {
-            _tanks.ToList().ForEach(x => x.Reset());
+            //_tanks.ToList().ForEach(x => x.Reset());
         }
 
         private void EnableTankControl()
         {
-            _tanks.ToList().ForEach(x => x.EnableControl());
+            //_tanks.ToList().ForEach(x => x.EnableControl());
         }
 
         private void DisableTankControl()
         {
-            _tanks.ToList().ForEach(x => x.DisableControl());
+            //_tanks.ToList().ForEach(x => x.DisableControl());
         }
     }
 }
