@@ -12,7 +12,7 @@ namespace Complete
 {
     public class GameManager : MonoBehaviour
     {
-        public int _numRoundsToWin = 5;
+        public int _numRoundsToWin = 3;
         public float _startDelay = 3f;
         public float _endDelay = 3f;
 
@@ -21,15 +21,10 @@ namespace Complete
         public GameObject _tankPrefab;
         public TankManager[] _tanks;               // A collection of managers for enabling and disabling different aspects of the tanks.
 
-        [FormerlySerializedAsAttribute("m_RoundNumber")]
         private int _roundNumber;
-        [FormerlySerializedAsAttribute("m_StartWait")]
         private WaitForSeconds _startWait;
-        [FormerlySerializedAsAttribute("m_EndWait")]
         private WaitForSeconds _endWait;
-        [FormerlySerializedAsAttribute("m_RoundWinner")]
         private TankManager _roundWinner;
-        [FormerlySerializedAsAttribute("m_GameWinner")]
         private TankManager _gameWinner;
 
         [HideInInspector]
