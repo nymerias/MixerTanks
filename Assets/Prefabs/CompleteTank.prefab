@@ -623,7 +623,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 24378114, guid: 86a7353f2579d476fbaa7f161c2e5d00,
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 4932ab25b84dd7649b80af68a9660ddc, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 0.2
   m_Pitch: 1
   Loop: 1
@@ -890,12 +890,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 030896d0325fa3e4d8d7d4cfe2351cb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_StartingHealth: 100
-  m_Slider: {fileID: 11482748}
-  m_FillImage: {fileID: 11404512}
-  m_FullHealthColor: {r: 0, g: 1, b: 0, a: 1}
-  m_ZeroHealthColor: {r: 1, g: 0, b: 0, a: 1}
-  m_ExplosionPrefab: {fileID: 151086, guid: 6bc6d0dd8b8428e4ca316513f2cf13c6, type: 2}
+  _startingHealth: 100
+  _slider: {fileID: 11482748}
+  _fillImage: {fileID: 11404512}
+  _fullHealthColor: {r: 0, g: 1, b: 0, a: 1}
+  _zeroHealthColor: {r: 1, g: 0, b: 0, a: 1}
+  _explosionPrefab: {fileID: 151086, guid: 6bc6d0dd8b8428e4ca316513f2cf13c6, type: 2}
 --- !u!114 &11416810
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -907,7 +907,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeac210ca39225b458bb07429e573f2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UseRelativeRotation: 1
+  _useRelativeRotation: 1
 --- !u!114 &11417308
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -940,13 +940,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e4cc0827b572b5408b2cd8eb8b456b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PlayerNumber: 1
-  m_Speed: 12
-  m_TurnSpeed: 180
-  m_MovementAudio: {fileID: 8261418}
-  m_EngineIdling: {fileID: 8300000, guid: 4932ab25b84dd7649b80af68a9660ddc, type: 3}
-  m_EngineDriving: {fileID: 8300000, guid: d7ca9fb5aa30155449192b23d7fb3336, type: 3}
-  m_PitchRange: 0.1
+  _playerNumber: 1
+  _speed: 12
+  _turnSpeed: 180
+  _movementAudio: {fileID: 8261418}
+  _engineIdling: {fileID: 8300000, guid: 4932ab25b84dd7649b80af68a9660ddc, type: 3}
+  _engineDriving: {fileID: 8300000, guid: d7ca9fb5aa30155449192b23d7fb3336, type: 3}
+  _pitchRange: 0.1
 --- !u!114 &11447178
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1076,16 +1076,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 184d72ea2424d1443bca885930fe844a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PlayerNumber: 1
-  m_Shell: {fileID: 5409530, guid: 008ecb1b70bec724fa2cd34255b0d8f8, type: 2}
-  m_FireTransform: {fileID: 435794}
-  m_AimSlider: {fileID: 11407922}
-  m_ShootingAudio: {fileID: 8268710}
-  m_ChargingClip: {fileID: 8300000, guid: c17f124fcdc0f5446a72f793898bd74b, type: 3}
-  m_FireClip: {fileID: 8300000, guid: 672a9941361ad494a99fba36759eca80, type: 3}
-  m_MinLaunchForce: 15
-  m_MaxLaunchForce: 30
-  m_MaxChargeTime: 0.75
+  _playerNumber: 1
+  _shell: {fileID: 5409530, guid: 008ecb1b70bec724fa2cd34255b0d8f8, type: 2}
+  _fireTransform: {fileID: 435794}
+  _aimSlider: {fileID: 11407922}
+  _shootingAudio: {fileID: 8268710}
+  _chargingClip: {fileID: 8300000, guid: c17f124fcdc0f5446a72f793898bd74b, type: 3}
+  _fireClip: {fileID: 8300000, guid: 672a9941361ad494a99fba36759eca80, type: 3}
+  _minLaunchForce: 15
+  _maxLaunchForce: 30
+  _maxChargeTime: 0.75
 --- !u!198 &19809832
 ParticleSystem:
   m_ObjectHideFlags: 1

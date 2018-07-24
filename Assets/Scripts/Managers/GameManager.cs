@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using UnityEngine.Serialization;
 using System.Linq;
 using Microsoft.Mixer;
+using Assets.Scripts.Managers;
+using Assets.Scripts.Mixer;
 
 namespace Complete
 {
@@ -36,10 +38,16 @@ namespace Complete
         [FormerlySerializedAsAttribute("m_GameWinner")]
         private TankManager _gameWinner;
 
+        [HideInInspector]
+        private InteractiveStateMachine _stateMachine;
+
         private void Start()
         {
+            _stateMachine = new InteractiveStateMachine();
+
             MixerInteractive.GoInteractive();
             MixerInteractive.OnInteractivityStateChanged += OnMixerInteractivtyStarted;
+            MixerInteractive.OnParticipantStateChanged += OnParticipantStateChange;
 
             _startWait = new WaitForSeconds(_startDelay);
             _endWait = new WaitForSeconds(_endDelay);
@@ -55,22 +63,16 @@ namespace Complete
         {
             if (MixerInteractive.InteractivityState == InteractivityState.InteractivityEnabled)
             {
-                MixerInteractive.SetCurrentScene("playerControls");
+                MixerInteractive.SetCurrentScene(OnlineConstants.SCENE_LOBBY);
 
-                var label = MixerInteractive.GetControl("statusUpdate") as InteractiveLabelControl;
-                label.SetText("Waiting for players to join");
-
-                MixerInteractive.OnInteractiveButtonEvent += (source, ev) =>
-                {
-                    //TODO: We will need to clean this up a bunch
-                    if (ev.ControlID == "joinPlayer1")
-                    {
-                        label.SetText("Player 1 has joined");
-                        //ev.Participant.UserID
-                        ev.Participant.Group = MixerInteractive.GetGroup("controls");
-                    }
-                };
+                _stateMachine.UpdateLobbyStatus();
+                _stateMachine.HandlePlayerJoins();
             }
+        }
+
+        private void OnParticipantStateChange(object sender, InteractiveParticipantStateChangedEventArgs ev)
+        {
+            ev.Participant.Group = MixerInteractive.GetGroup(_stateMachine.ParticipantStartGroup);
         }
 
         private void SpawnAllTanks()
@@ -99,7 +101,9 @@ namespace Complete
         /// </summary>
         private IEnumerator GameLoop()
         {
-            //TODO: Waiting for two players to join
+            ResetGame();
+
+            yield return StartCoroutine(WaitingForPlayers());
 
             yield return StartCoroutine(RoundStarting());
 
@@ -119,15 +123,34 @@ namespace Complete
             }
         }
 
-        private IEnumerator RoundStarting()
+        private void ResetGame()
         {
             ResetAllTanks();
             DisableTankControl();
 
             _cameraControl.SetStartPositionAndSize();
+        }
 
+        private IEnumerator WaitingForPlayers()
+        {
+            _messageText.text = "WAITING FOR PLAYERS";
+
+            while (!_stateMachine.AllPlayersJoined)
+            {
+                yield return null;
+            }
+        }
+
+        private IEnumerator RoundStarting()
+        {
             _roundNumber++;
             _messageText.text = "ROUND " + _roundNumber;
+
+            _tanks[1]._movement.participantId = _stateMachine.ParticipantOne.UserID;
+            _tanks[1]._shooting.participantId = _stateMachine.ParticipantOne.UserID;
+
+            _tanks[0]._movement.participantId = _stateMachine.ParticipantTwo.UserID;
+            _tanks[0]._shooting.participantId = _stateMachine.ParticipantTwo.UserID;
 
             yield return _startWait;
         }
