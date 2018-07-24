@@ -5,6 +5,7 @@ using System.Linq;
 using Assets.Scripts.Mixer;
 using Microsoft.Mixer;
 
+
 namespace Complete
 {
     /// <summary>
@@ -14,7 +15,7 @@ namespace Complete
     /// different phases of the game.
     /// </summary>
     [Serializable]
-    public class TankManager
+    public class TankManager : HelpContract
     {
         public string _playerName;
         [FormerlySerializedAsAttribute("m_PlayerColor")]
@@ -51,14 +52,18 @@ namespace Complete
             }
         }
 
+        private GiveHelpManager _giveHelpManager = new GiveHelpManager();
+
         public void Setup()
         {
             ToggleSounds(false);
-            HandleGiveHelp();
+
+            _giveHelpManager.SetUpGiveHelp(this);
 
             _movement = _instance.GetComponent<TankMovement>();
             _shooting = _instance.GetComponent<TankShooting>();
             _health = _instance.GetComponent<TankHealth>();
+
             _canvasGameObject = _instance.GetComponentInChildren<Canvas>().gameObject;
 
             _movement._playerNumber = _playerNumber;
@@ -116,22 +121,26 @@ namespace Complete
             });
         }
 
-        public void HandleGiveHelp()
+        // Methods for the HelpContract
+
+        public void increaseHealth(int amount)
         {
-            MixerInteractive.OnInteractiveButtonEvent += (source, ev) =>
-            {
-                var label = MixerInteractive.GetControl(OnlineConstants.CONTROL_INFO_UPDATE) as InteractiveLabelControl;
-                if (ev.ControlID == OnlineConstants.CONTROL_HELP_RED)
-                {
-                    _health.ReceiveHelp(20f);
-                    label.SetText("Gave 20HP to Red!");
-                }
-                else if (ev.ControlID == OnlineConstants.CONTROL_HELP_BLUE)
-                {
-                    _health.ReceiveHelp(20f);
-                    label.SetText("Gave 20HP to Blue!");
-                }
-            };
+             _health.ReceiveHelp(amount);
+        }
+
+        public void setSpeedMultiplier(float speed)
+        {
+            //_movement._speed = "24f";
+        }
+
+        public void setAttackMultiplier(float attack)
+        {
+
+        }
+
+        public void setDefenseMultiplier(float defense)
+        {
+
         }
     }
 }
