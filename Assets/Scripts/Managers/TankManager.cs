@@ -25,9 +25,9 @@ namespace Complete
         [HideInInspector] public int _wins;
 
         [FormerlySerializedAsAttribute("m_Movement")]
-        private TankMovement _movement;
+        public TankMovement _movement;  //TODO: Make a getter/setter for this
         [FormerlySerializedAsAttribute("m_Shooting")]
-        private TankShooting _shooting;
+        public TankShooting _shooting;
         [FormerlySerializedAsAttribute("m_CanvasGameObject")]
         private GameObject _canvasGameObject;
 

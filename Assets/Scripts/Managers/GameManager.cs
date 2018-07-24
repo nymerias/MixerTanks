@@ -146,6 +146,12 @@ namespace Complete
             _roundNumber++;
             _messageText.text = "ROUND " + _roundNumber;
 
+            _tanks[1]._movement.participantId = _stateMachine.ParticipantOne.UserID;
+            _tanks[1]._shooting.participantId = _stateMachine.ParticipantOne.UserID;
+
+            _tanks[0]._movement.participantId = _stateMachine.ParticipantTwo.UserID;
+            _tanks[0]._shooting.participantId = _stateMachine.ParticipantTwo.UserID;
+
             yield return _startWait;
         }
 

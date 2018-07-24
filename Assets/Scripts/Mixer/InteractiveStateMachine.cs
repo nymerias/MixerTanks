@@ -54,8 +54,6 @@ namespace Assets.Scripts.Managers
         {
             MixerInteractive.OnInteractiveButtonEvent += (source, ev) =>
             {
-                //ev.Participant.UserID //TODO: Send this to tank manager
-
                 if (ev.ControlID == OnlineConstants.CONTROL_P1_JOIN)
                 {
                     _p1Joined = true;

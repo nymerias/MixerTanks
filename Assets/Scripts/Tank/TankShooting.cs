@@ -53,8 +53,6 @@ namespace Complete
 
             // The rate that the launch force charges up is the range of possible forces by the max charge time.
             _chargeSpeed = (_maxLaunchForce - _minLaunchForce) / _maxChargeTime;
-
-            participantId = MixerInteractive.Participants[0].UserID;
         }
 
         private void UpdateOld()
