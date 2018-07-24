@@ -872,7 +872,7 @@ public class MixerInteractive : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns whether the button with the given control ID is currently pressed.
+    /// Returns whether the button with the given control ID is currently pressed.s
     /// </summary>
     /// <param name="controlID">String ID of the control.</param>
     public static bool GetButton(string controlID)

@@ -55,7 +55,7 @@ namespace Complete
         {
             if (MixerInteractive.InteractivityState == InteractivityState.InteractivityEnabled)
             {
-                MixerInteractive.SetCurrentScene("lobby");
+                MixerInteractive.SetCurrentScene("playerControls");
 
                 var label = MixerInteractive.GetControl("statusUpdate") as InteractiveLabelControl;
                 label.SetText("Waiting for players to join");

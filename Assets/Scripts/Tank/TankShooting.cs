@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Serialization;
+using Microsoft.Mixer;
 
 namespace Complete
 {
@@ -37,6 +38,8 @@ namespace Complete
         [FormerlySerializedAsAttribute("m_Fired")]
         private bool _fired;
 
+        public uint participantId;
+
         private void OnEnable()
         {
             _currentLaunchForce = _minLaunchForce;
@@ -50,9 +53,11 @@ namespace Complete
 
             // The rate that the launch force charges up is the range of possible forces by the max charge time.
             _chargeSpeed = (_maxLaunchForce - _minLaunchForce) / _maxChargeTime;
+
+            participantId = MixerInteractive.Participants[0].UserID;
         }
 
-        private void Update()
+        private void UpdateOld()
         {
             _aimSlider.value = _minLaunchForce;
 
@@ -75,6 +80,34 @@ namespace Complete
                 _aimSlider.value = _currentLaunchForce;
             }
             else if (Input.GetButtonUp(_fireButton) && !_fired)
+            {
+                Fire();
+            }
+        }
+
+        private void Update()
+        {
+            _aimSlider.value = _minLaunchForce;
+
+            if (_currentLaunchForce >= _maxLaunchForce && !_fired)
+            {
+                _currentLaunchForce = _maxLaunchForce;
+                Fire();
+            }
+            else if (InteractivityManager.SingletonInstance.GetButton("fire").GetButtonDown(participantId))
+            {
+                _fired = false;
+                _currentLaunchForce = _minLaunchForce;
+
+                _shootingAudio.clip = _chargingClip;
+                _shootingAudio.Play();
+            }
+            else if (!InteractivityManager.SingletonInstance.GetButton("fire").GetButtonUp(participantId) && !_fired)
+            {
+                _currentLaunchForce += _chargeSpeed * Time.deltaTime;
+                _aimSlider.value = _currentLaunchForce;
+            }
+            else if (InteractivityManager.SingletonInstance.GetButton("fire").GetButtonUp(participantId) && !_fired)
             {
                 Fire();
             }

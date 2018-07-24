@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Serialization;
 using System.Linq;
+using Microsoft.Mixer;
 
 namespace Complete
 {
@@ -20,6 +21,8 @@ namespace Complete
         public AudioClip _engineDriving;
         [FormerlySerializedAsAttribute("m_PitchRange")]
         public float _pitchRange = 0.2f;
+        [HideInInspector]
+        public uint participantId;
 
         [FormerlySerializedAsAttribute("m_MovementAxisName")]
         private string _movementAxisName;
@@ -35,13 +38,17 @@ namespace Complete
         private float _originalPitch;
         [FormerlySerializedAsAttribute("m_particleSystems")]
         private ParticleSystem[] _particleSystems;
+        [HideInInspector]
+        private InteractivityManager interactivityManager;
 
-        private void Awake()
+        private TankDirection tankDirection;
+
+        void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
         }
 
-        private void OnEnable()
+        void OnEnable()
         {
             _rigidbody.isKinematic = false;
 
@@ -64,7 +71,7 @@ namespace Complete
             _particleSystems.ToList().ForEach(x => x.Stop());
         }
 
-        private void Start()
+        void Start()
         {
             // The axes names are based on player number.
             _movementAxisName = "Vertical" + _playerNumber;
@@ -72,9 +79,16 @@ namespace Complete
 
             // Store the original pitch of the audio source.
             _originalPitch = _movementAudio.pitch;
+
+            //Instantiate InteractivityManager
+            interactivityManager = InteractivityManager.SingletonInstance;
+
+            //take out
+            participantId = MixerInteractive.Participants[0].UserID;
+            tankDirection = new TankDirection(participantId);
         }
 
-        private void Update()
+        void Update()
         {
             _movementInputValue = Input.GetAxis(_movementAxisName);
             _turnInputValue = Input.GetAxis(_turnAxisName);
@@ -82,7 +96,7 @@ namespace Complete
             EngineAudio();
         }
 
-        private void EngineAudio()
+        void EngineAudio()
         {
             // If there is no input the tank is stationary
             if (Mathf.Abs(_movementInputValue) < 0.1f && Mathf.Abs(_turnInputValue) < 0.1f)
@@ -104,7 +118,7 @@ namespace Complete
             }
         }
 
-        private void FixedUpdate()
+        void FixedUpdate()
         {
             Move();
             Turn();
@@ -116,6 +130,8 @@ namespace Complete
         private void Move()
         {
             // Create a vector in the direction the tank is facing with a magnitude based on the input, speed and the time between frames.
+            _movementInputValue = tankDirection.VerticalDirection();
+
             Vector3 movement = transform.forward * _movementInputValue * _speed * Time.deltaTime;
             _rigidbody.MovePosition(_rigidbody.position + movement);
         }
@@ -125,10 +141,108 @@ namespace Complete
         /// </summary>
         private void Turn()
         {
+            _turnInputValue = tankDirection.HorizontalDirection();
+
             float turn = _turnInputValue * _turnSpeed * Time.deltaTime;
 
             Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);
             _rigidbody.MoveRotation(_rigidbody.rotation * turnRotation);
+        }
+    }
+
+    public class TankDirection
+    {
+        private InteractiveButtonControl forwardButton;
+        private InteractiveButtonControl backButton;
+        private InteractiveButtonControl leftButton;
+        private InteractiveButtonControl rightButton;
+
+        private bool movingForward;
+        private bool movingBackward;
+        private bool movingLeft;
+        private bool movingRight;
+
+        private uint userId;
+
+        public TankDirection(uint userId)
+        {
+            this.userId = userId;
+            forwardButton = InteractivityManager.SingletonInstance.GetButton("forward");
+            backButton = InteractivityManager.SingletonInstance.GetButton("back");
+            leftButton = InteractivityManager.SingletonInstance.GetButton("left");
+            rightButton = InteractivityManager.SingletonInstance.GetButton("right");
+        }
+
+        public float VerticalDirection()
+        {
+            if (forwardButton.GetButtonDown(userId))
+            {
+                movingForward = true;
+                movingBackward = false;
+            }
+            else if (backButton.GetButtonDown(userId))
+            {
+                movingForward = false;
+                movingBackward = true;
+            }
+
+            if (forwardButton.GetButtonUp(userId))
+            {
+                movingForward = false;
+            }
+            else if (backButton.GetButtonUp(userId))
+            {
+                movingBackward = false;
+            }
+
+            if (movingForward)
+            {
+                return 1;
+            }
+
+            if (movingBackward)
+            {
+                return -1;
+            }
+
+            return 0;
+        }
+
+        public float HorizontalDirection()
+        {
+            if (leftButton.GetButtonDown(userId))
+            {
+                movingLeft = true;
+                movingRight = false;
+            }
+
+            if (rightButton.GetButtonDown(userId))
+            {
+                movingLeft = false;
+                movingRight = true;
+            }
+
+            if (leftButton.GetButtonUp(userId))
+            {
+                movingLeft = false;
+            }
+
+            if (rightButton.GetButtonUp(userId))
+            {
+                movingRight = false;
+            }
+
+            if (movingRight)
+            {
+                return 1;
+            }
+
+            if (movingLeft)
+            {
+                return -1;
+            }
+
+            return 0;
         }
     }
 }
