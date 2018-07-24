@@ -30,7 +30,7 @@ namespace Assets.Scripts.Managers
             get
             {
                 return AllPlayersJoined ?
-                    OnlineConstants.GROUP_VIEWERS :
+                    OnlineConstants.GROUP_HELP :
                     OnlineConstants.GROUP_START;
             }
         }

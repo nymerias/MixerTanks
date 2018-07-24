@@ -43,6 +43,17 @@ namespace Complete
             SetHealthUI();
         }
 
+        public void ReceiveHelp(float amount)
+        {
+            _currentHealth += amount;
+            if (_currentHealth > _startingHealth)
+            {
+                _currentHealth = _startingHealth;
+            }
+
+            SetHealthUI();
+        }
+
         public void TakeDamage(float amount)
         {
             _currentHealth -= amount;

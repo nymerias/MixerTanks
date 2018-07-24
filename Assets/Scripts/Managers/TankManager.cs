@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.Serialization;
 using System.Linq;
+using Assets.Scripts.Mixer;
 using Microsoft.Mixer;
 
 namespace Complete
@@ -29,6 +30,7 @@ namespace Complete
         public TankMovement _movement;  //TODO: Make a getter/setter for this
         [FormerlySerializedAsAttribute("m_Shooting")]
         public TankShooting _shooting;
+        public TankHealth _health;
         [FormerlySerializedAsAttribute("m_CanvasGameObject")]
         private GameObject _canvasGameObject;
 
@@ -52,9 +54,11 @@ namespace Complete
         public void Setup()
         {
             ToggleSounds(false);
+            HandleGiveHelp();
 
             _movement = _instance.GetComponent<TankMovement>();
             _shooting = _instance.GetComponent<TankShooting>();
+            _health = _instance.GetComponent<TankHealth>();
             _canvasGameObject = _instance.GetComponentInChildren<Canvas>().gameObject;
 
             _movement._playerNumber = _playerNumber;
@@ -110,6 +114,24 @@ namespace Complete
                 else
                     x.Stop();
             });
+        }
+
+        public void HandleGiveHelp()
+        {
+            MixerInteractive.OnInteractiveButtonEvent += (source, ev) =>
+            {
+                var label = MixerInteractive.GetControl(OnlineConstants.CONTROL_INFO_UPDATE) as InteractiveLabelControl;
+                if (ev.ControlID == OnlineConstants.CONTROL_HELP_RED)
+                {
+                    _health.ReceiveHelp(20f);
+                    label.SetText("Gave 20HP to Red!");
+                }
+                else if (ev.ControlID == OnlineConstants.CONTROL_HELP_BLUE)
+                {
+                    _health.ReceiveHelp(20f);
+                    label.SetText("Gave 20HP to Blue!");
+                }
+            };
         }
     }
 }
