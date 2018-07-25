@@ -21,6 +21,8 @@ namespace Assets.Scripts.Mixer
         public static String CONTROL_BACK = "back";
         public static String CONTROL_RIGHT = "right";
         public static String CONTROL_FIRE = "fire";
+        public static String CONTROL_PLAYER_UPDATE = "playerUpdates";
+        public static String CONTROL_PLAYER_INFO = "playerInfo";
 
         public static String CONTROL_P1_JOIN = "joinPlayer1";
         public static String CONTROL_P2_JOIN = "joinPlayer2";
@@ -28,6 +30,6 @@ namespace Assets.Scripts.Mixer
 
         public static String CONTROL_HELP_RED = "helpRed";
         public static String CONTROL_HELP_BLUE = "helpBlue";
-        public static String CONTROL_INFO_UPDATE = "infoUpdate";
+        public static String CONTROL_VIEWER_UPDATE = "viewerUpdate";
     }
 }

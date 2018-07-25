@@ -21,12 +21,17 @@ namespace Complete
 
         private static readonly string[] boosts = { "20HP", "speed boost", "attack boost", "defense boost" };
 
-        private InteractiveLabelControl getLabel()
+        private InteractiveLabelControl getViewerLabel()
         {
-            return MixerInteractive.GetControl(OnlineConstants.CONTROL_INFO_UPDATE) as InteractiveLabelControl;
+            return MixerInteractive.GetControl(OnlineConstants.CONTROL_VIEWER_UPDATE) as InteractiveLabelControl;
         }
 
-        public void GiveHelp(HelpContract helpContract)
+        private InteractiveLabelControl getPlayerLabel()
+        {
+            return MixerInteractive.GetControl(OnlineConstants.CONTROL_PLAYER_UPDATE) as InteractiveLabelControl;
+        }
+
+        public void GiveHelp(HelpContract helpContract, String helperName)
         {
             System.Random rnd = new System.Random();
             int action = rnd.Next(0, 4);
@@ -46,7 +51,9 @@ namespace Complete
                     helpContract.setDefenceMultiplier(2f);
                     break;
             }
-            getLabel().SetText("Gave " + boosts[action] + " to " + helpContract.getUsername() + "!");
+            String update = helperName + " gave " + boosts[action] + " to " + helpContract.getUsername() + "!";
+            getViewerLabel().SetText(update);
+            getPlayerLabel().SetText(update);
             if (action > 0)
             {
                 StartHelpCooldown(helpContract, action);
@@ -79,7 +86,9 @@ namespace Complete
                     helpContract.setDefenceMultiplier(1f);
                     break;
             }
-            getLabel().SetText(helpContract.getUsername() + "'s " + boosts[action] + " has worn off!");
+            String update = helpContract.getUsername() + "'s " + boosts[action] + " has worn off!";
+            getViewerLabel().SetText(update);
+            getPlayerLabel().SetText(update);
         }
 
     }

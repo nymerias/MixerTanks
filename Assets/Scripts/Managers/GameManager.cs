@@ -75,12 +75,12 @@ namespace Complete
         {
             if (ev.ControlID == OnlineConstants.CONTROL_HELP_RED)
             {
-                _giveHelpManager.GiveHelp(_redPlayer);
+                _giveHelpManager.GiveHelp(_redPlayer, ev.Participant.UserName);
                 MixerInteractive.TriggerCooldown(ev.ControlID, 10000);
             }
             else if (ev.ControlID == OnlineConstants.CONTROL_HELP_BLUE)
             {
-                _giveHelpManager.GiveHelp(_bluePlayer);
+                _giveHelpManager.GiveHelp(_bluePlayer, ev.Participant.UserName);
                 MixerInteractive.TriggerCooldown(ev.ControlID, 10000);
             }
         }
@@ -136,6 +136,10 @@ namespace Complete
 
             _stateMachine.SetViewersToGiveHelp();
 
+            var playerInfoLabel = MixerInteractive.GetControl(OnlineConstants.CONTROL_PLAYER_INFO) as InteractiveLabelControl;
+            var playerUpdateLabel = MixerInteractive.GetControl(OnlineConstants.CONTROL_PLAYER_UPDATE) as InteractiveLabelControl;
+            playerInfoLabel.SetText(_redPlayer.OnlineParticipant.UserName + " is Red\n" + _bluePlayer.OnlineParticipant.UserName + " is Blue");
+            playerUpdateLabel.SetText("Game has begun!");
             yield return null;
         }
 
