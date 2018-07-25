@@ -35,7 +35,7 @@ namespace Complete
         [FormerlySerializedAsAttribute("m_ChargeSpeed")]
         private float _chargeSpeed;
         [FormerlySerializedAsAttribute("m_Fired")]
-        private bool _fired;
+        private bool _fired = true;
 
         public uint participantId;
 

@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Microsoft.Mixer;
+using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
-using System.Linq;
-using Assets.Scripts.Mixer;
-using Microsoft.Mixer;
 
 
 namespace Complete
