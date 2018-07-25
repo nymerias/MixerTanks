@@ -8,6 +8,7 @@ using Microsoft.Mixer;
 using Assets.Scripts.Managers;
 using Assets.Scripts.Mixer;
 using System.Collections.Generic;
+using System;
 
 namespace Complete
 {
@@ -42,7 +43,7 @@ namespace Complete
            
             MixerInteractive.GoInteractive();
             MixerInteractive.OnInteractivityStateChanged += OnMixerInteractivtyStarted;
-            MixerInteractive.OnParticipantStateChanged += _stateMachine.OnParticipantStateChange;
+            MixerInteractive.OnParticipantStateChanged += OnParticipantStateChange;
             MixerInteractive.OnInteractiveButtonEvent += OnGiveHelp;
 
             _startWait = new WaitForSeconds(_startDelay);
@@ -131,6 +132,7 @@ namespace Complete
             var playerUpdateLabel = MixerInteractive.GetControl(OnlineConstants.CONTROL_PLAYER_UPDATE) as InteractiveLabelControl;
             playerInfoLabel.SetText(_redPlayer.OnlineParticipant.UserName + " is Red\n" + _bluePlayer.OnlineParticipant.UserName + " is Blue");
             playerUpdateLabel.SetText("Game has begun!");
+
             yield return null;
         }
 
@@ -139,6 +141,8 @@ namespace Complete
         /// </summary
         private IEnumerator PlayAllGameRounds()
         {
+            _stateMachine.GameIsActive = true;
+
             while (_gameWinner == null)
             {
                 yield return StartCoroutine(RoundIsAboutToStart());
@@ -147,6 +151,8 @@ namespace Complete
 
                 yield return StartCoroutine(RoundHasEnded());
             }
+
+            _stateMachine.GameIsActive = false;
         }
 
         /// <summary>
@@ -293,6 +299,53 @@ namespace Complete
                 message = _gameWinner._coloredPlayerText + " WINS THE GAME!";
 
             return message;
+        }
+
+
+        /// <summary>
+        /// Event called for all participants arriving at the stream; only need particular handling
+        /// for when game players leave
+        /// </summary>
+        public void OnParticipantStateChange(object sender, InteractiveParticipantStateChangedEventArgs ev)
+        {
+            if (ev.State == InteractiveParticipantState.Joined)
+            {
+                ev.Participant.Group = MixerInteractive.GetGroup(_stateMachine.ParticipantStartGroup);
+            }
+            else if (ev.State == InteractiveParticipantState.Left)
+            {
+                HandleParticipantLeave(ev.Participant);
+            }
+        }
+
+        /// <summary>
+        /// Special leave handling for either of player 1 or 2
+        /// </summary>
+        private void HandleParticipantLeave(InteractiveParticipant participant)
+        {
+            if (participant == _stateMachine.ParticipantOne || participant == _stateMachine.ParticipantTwo)
+            {
+                if (_stateMachine.GameIsActive)
+                {
+                    _gameWinner = _playerTanks.ToList().First(tank => tank.OnlineParticipant == participant);
+                }
+                else if (participant == _stateMachine.ParticipantOne)
+                {
+                    _redPlayer.OnlineParticipant = null;
+                    _stateMachine.ParticipantOne = null;
+
+                    MixerInteractive.GetControl(OnlineConstants.CONTROL_P1_JOIN).SetDisabled(false);
+                    _stateMachine.UpdateLobbyStatus();
+                }
+                else if (participant == _stateMachine.ParticipantTwo)
+                {
+                    _bluePlayer.OnlineParticipant = null;
+                    _stateMachine.ParticipantTwo = null;
+
+                    MixerInteractive.GetControl(OnlineConstants.CONTROL_P2_JOIN).SetDisabled(false);
+                    _stateMachine.UpdateLobbyStatus();
+                }
+            }
         }
     }
 }

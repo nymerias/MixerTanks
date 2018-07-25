@@ -13,13 +13,18 @@ namespace Assets.Scripts.Managers
     /// </summary>
     class InteractiveStateMachine
     {
-        private bool _p1Joined, _p2Joined = false;
+        public bool GameIsActive
+        {
+            get;
+            set;
+        }
 
         public bool AllPlayersJoined
         {
             get
             {
-                return _p1Joined && _p2Joined;
+                return (ParticipantOne != null) && 
+                    (ParticipantTwo != null);
             }
         }
 
@@ -40,6 +45,7 @@ namespace Assets.Scripts.Managers
         {
             get;
             set;
+                
         }
 
         public InteractiveParticipant ParticipantTwo
@@ -67,7 +73,6 @@ namespace Assets.Scripts.Managers
 
         public void ResetToDefault()
         {
-            _p1Joined = _p2Joined = false;
             ParticipantOne = null;
             ParticipantTwo = null;
 
@@ -90,13 +95,11 @@ namespace Assets.Scripts.Managers
         {
             if (ev.ControlID == OnlineConstants.CONTROL_P1_JOIN)
             {
-                _p1Joined = true;
                 ParticipantOne = ev.Participant;
                 UpdateControlsAfterJoin(ev);
             }
             else if (ev.ControlID == OnlineConstants.CONTROL_P2_JOIN)
             {
-                _p2Joined = true;
                 ParticipantTwo = ev.Participant;
                 UpdateControlsAfterJoin(ev);
             }
@@ -120,33 +123,10 @@ namespace Assets.Scripts.Managers
             var waitingBlue = "Waiting for blue player";
             var blueJoined = "Blue player joined";
 
-            var message = (_p1Joined ? redJoined : waitingRed)
-                + (_p2Joined ? blueJoined : waitingBlue);
+            var message = (ParticipantOne != null ? redJoined : waitingRed)
+                + (ParticipantTwo != null ? blueJoined : waitingBlue);
 
             label.SetText(message);
-        }
-
-        public void OnParticipantStateChange(object sender, InteractiveParticipantStateChangedEventArgs ev)
-        {
-            if (ev.State == InteractiveParticipantState.Joined)
-            {
-                ev.Participant.Group = MixerInteractive.GetGroup(ParticipantStartGroup);
-            }
-            else if (ev.State == InteractiveParticipantState.Left)
-            {
-                HandleParticipantLeave(ev.Participant);
-            }
-        }
-
-        /// <summary>
-        /// Special leave handling for either of player 1 or 2
-        /// </summary>
-        private void HandleParticipantLeave(InteractiveParticipant participant)
-        {
-            //if (participant == ParticipantOne)
-            //{
-
-            //}
         }
     }
 }
