@@ -1,13 +1,11 @@
-using System.Collections;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using UnityEngine.Serialization;
-using System.Linq;
-using Microsoft.Mixer;
 using Assets.Scripts.Managers;
 using Assets.Scripts.Mixer;
+using Microsoft.Mixer;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace Complete
 {
