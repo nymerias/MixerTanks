@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Assets.Scripts.Managers
 {
@@ -123,6 +124,29 @@ namespace Assets.Scripts.Managers
                 + (_p2Joined ? blueJoined : waitingBlue);
 
             label.SetText(message);
+        }
+
+        public void OnParticipantStateChange(object sender, InteractiveParticipantStateChangedEventArgs ev)
+        {
+            if (ev.State == InteractiveParticipantState.Joined)
+            {
+                ev.Participant.Group = MixerInteractive.GetGroup(ParticipantStartGroup);
+            }
+            else if (ev.State == InteractiveParticipantState.Left)
+            {
+                HandleParticipantLeave(ev.Participant);
+            }
+        }
+
+        /// <summary>
+        /// Special leave handling for either of player 1 or 2
+        /// </summary>
+        private void HandleParticipantLeave(InteractiveParticipant participant)
+        {
+            //if (participant == ParticipantOne)
+            //{
+
+            //}
         }
     }
 }

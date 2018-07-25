@@ -42,7 +42,7 @@ namespace Complete
            
             MixerInteractive.GoInteractive();
             MixerInteractive.OnInteractivityStateChanged += OnMixerInteractivtyStarted;
-            MixerInteractive.OnParticipantStateChanged += OnParticipantStateChange;
+            MixerInteractive.OnParticipantStateChanged += _stateMachine.OnParticipantStateChange;
             MixerInteractive.OnInteractiveButtonEvent += OnGiveHelp;
 
             _startWait = new WaitForSeconds(_startDelay);
@@ -60,15 +60,6 @@ namespace Complete
                 _stateMachine.UpdateLobbyStatus();
                 _stateMachine.HandlePlayerJoins();
             }
-        }
-
-        private void OnParticipantStateChange(object sender, InteractiveParticipantStateChangedEventArgs ev)
-        {
-            if (ev.State == InteractiveParticipantState.Joined)
-            {
-                ev.Participant.Group = MixerInteractive.GetGroup(_stateMachine.ParticipantStartGroup);
-            }
-            //TODO: We may want to handle the "leaving" state for any of the current set of players
         }
 
         private void OnGiveHelp(object sender, InteractiveButtonEventArgs ev)
