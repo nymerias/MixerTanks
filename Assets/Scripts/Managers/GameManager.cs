@@ -19,6 +19,7 @@ namespace Complete
 
         public CameraControl _cameraControl;       // Reference to the CameraControl script for control during different phases.
         public Text _messageText;                  // Reference to the overlay Text to display winning text, etc.
+        public Text _statusUpdateText;
         public GameObject _tankPrefab;
 
         public TankManager _redPlayer;
@@ -39,7 +40,9 @@ namespace Complete
         {
             _stateMachine = new InteractiveStateMachine();
             _giveHelpManager = new GiveHelpManager();
-           
+
+            _statusUpdateText.text = "";
+
             MixerInteractive.GoInteractive();
             MixerInteractive.OnInteractivityStateChanged += OnMixerInteractivtyStarted;
             MixerInteractive.OnParticipantStateChanged += OnParticipantStateChange;

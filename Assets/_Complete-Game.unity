@@ -612,6 +612,7 @@ MonoBehaviour:
   _endDelay: 3
   _cameraControl: {fileID: 1771596988}
   _messageText: {fileID: 102963701}
+  _statusUpdateText: {fileID: 1354697217}
   _tankPrefab: {fileID: 173472, guid: 756d3a6506f2f8241b4e8badde68567a, type: 2}
   _redPlayer:
     _playerName: RED
@@ -662,7 +663,7 @@ GameObject:
   - component: {fileID: 1354697217}
   - component: {fileID: 1354697216}
   m_Layer: 5
-  m_Name: Red Player Score
+  m_Name: In Game Updates
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
